@@ -1,8 +1,7 @@
 import 'package:blackbeans/bloc/user_repository.dart';
-import 'package:blackbeans/models/profile.dart';
 import 'package:blackbeans/screens/edit_profile.dart';
 import 'package:blackbeans/screens/recipes_home.dart';
-import 'package:blackbeans/widgets/beans_custom_appbar.dart';
+import 'package:blackbeans/widgets/switch_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -28,20 +27,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     if (profileCheck) {
       _userProfile = profileData.fetchProfile();
       profileCheck = false;
-
-      // .then((_) {
-      //   setState(() {
-      //     if (profileData.userProfile != null) {
-      //       _userProfile = profileData.userProfile;
-      //     } else {
-      //       _userProfile = Profile(
-      //           name: 'User',
-      //           lastName: '',
-      //           userPhotoUrl: 'https://i.ibb.co/vJJ4Qs0/nobeans.png');
-      //     }
-      //     profileCheck = false;
-      //   });
-      // });
     }
     super.initState();
   }
@@ -67,24 +52,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BeansCustomAppBar(
-            isBackButton: false,
-            trailingIcon: Icon(Ionicons.pencil),
-            trailingIconAction: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) =>
-                            EditProfileScreen()))
-          ),
-          SizedBox(height: 50),
           FutureBuilder(
               future: _userProfile,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(
+                      child: CircularProgressIndicator());
                 } else {
                   return Consumer<UserRepository>(
                     builder: (ctx, repositoryData, child) {
                       return Padding(
-                        padding: EdgeInsets.all(24),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 100),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -92,9 +71,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               children: [
                                 CircleAvatar(
                                   radius: 40,
-                                  backgroundImage: NetworkImage(repositoryData.userProfile.userPhotoUrl),
+                                  backgroundImage: NetworkImage(
+                                      repositoryData.userProfile.userPhotoUrl),
                                 ),
-                                SizedBox(width: 14),
+                                const SizedBox(width: 14),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -112,34 +92,41 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 40),
+                            const SizedBox(height: 40),
                             Text('Settings',
                                 style: Theme.of(context).textTheme.headline2),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             SettingsItem(
                               iconShapeColor: Colors.purple[50],
                               iconColor: Colors.purple,
                               icon: Ionicons.finger_print,
                               settingsTitle: 'Your info',
-                              onPressedAction: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) =>
-                            EditProfileScreen(currentProfile: repositoryData.userProfile,))),
+                              onPressedAction: () =>
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => EditProfileScreen(
+                                            currentProfile:
+                                                repositoryData.userProfile,
+                                          ))),
                             ),
-                            SizedBox(height: 20),
-                            SettingsItem(
-                              iconShapeColor: Colors.lightBlue[50],
-                              iconColor: Colors.lightBlue,
-                              icon: Ionicons.moon,
-                              settingsTitle: 'Dark Mode',
+                            const SizedBox(height: 20),
+                            Consumer<SwitchTheme>(
+                              builder: (context, switchTheme, child) =>
+                                  SettingsItem(
+                                      iconShapeColor: Colors.lightBlue[50],
+                                      iconColor: Colors.lightBlue,
+                                      icon: Ionicons.moon,
+                                      settingsTitle: 'Dark Mode',
+                                      onPressedAction: () =>
+                                          switchTheme.toggleTheme()),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             SettingsItem(
                               iconShapeColor: Colors.orange[50],
                               iconColor: Colors.orange,
                               icon: Ionicons.earth,
                               settingsTitle: 'Language',
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             SettingsItem(
                               iconShapeColor: Colors.red[50],
                               iconColor: Colors.red,
@@ -219,7 +206,7 @@ class SettingsItem extends StatelessWidget {
                 size: 20,
               ),
             ),
-            SizedBox(width: 14),
+            const SizedBox(width: 14),
             Text(
               settingsTitle,
               style: Theme.of(context).textTheme.headline5,
@@ -227,13 +214,12 @@ class SettingsItem extends StatelessWidget {
           ],
         ),
         Material(
-          color: Colors.grey[200],
+          color: Theme.of(context).primaryColorDark,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: IconButton(
             icon: const Icon(
               Ionicons.chevron_forward,
-              color: Colors.black,
               size: 18,
             ),
             onPressed: onPressedAction,
@@ -267,26 +253,24 @@ class StunningBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Material(
-              color: Colors.white60,
+              color: Theme.of(context).primaryColorDark,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
               child: IconButton(
                 icon: const Icon(
                   Icons.arrow_back_ios_rounded,
-                  color: Colors.black,
                   size: 22,
                 ),
                 onPressed: Navigator.of(context).pop,
               ),
             ),
             Material(
-              color: Colors.white60,
+              color: Theme.of(context).primaryColorDark,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
               child: IconButton(
                 icon: const Icon(
                   Icons.edit,
-                  color: Colors.black,
                   size: 24,
                 ),
                 onPressed: () => Navigator.of(context).canPop()

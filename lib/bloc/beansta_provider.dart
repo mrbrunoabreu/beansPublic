@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class BeanstaRepository with ChangeNotifier {
+class BeanstaProvider with ChangeNotifier {
   final String baseUrl = 'https://beans-aa4aa.firebaseio.com/';
 
   Future addPhotoItem(

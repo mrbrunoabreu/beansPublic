@@ -40,6 +40,7 @@ dependencies:
   path: ^1.7.0
   firebase_storage: ^5.2.0
   readmore: ^1.0.0
+  shared_preferences: ^0.5.12+4
 
 
 dev_dependencies:
@@ -89,10 +90,8 @@ flutter:
     - assets/images/kiyama.jpg
     - assets/images/curry.jpeg
     - assets/images/pumpkin.jpg
-    - assets/images/login_bg.png
     - assets/images/login-bg.jpg
-    - assets/images/login_light_bg.jpg
-    - assets/images/login_dark_bg.jpg
+    - assets/images/completeprofile-bg.jpg
     - assets/images/bruno_ppic.jpg
 
   # To add assets to your application, add an assets section, like this:

@@ -1,16 +1,14 @@
-import 'package:blackbeans/bloc/recipes_repository.dart';
+import 'package:blackbeans/bloc/recipes_provider.dart';
 import 'package:blackbeans/bloc/user_repository.dart';
 import 'package:blackbeans/models/recipe.dart';
 import 'package:blackbeans/screens/add_item_selection.dart';
 import 'package:blackbeans/screens/add_recipe.dart';
 import 'package:blackbeans/screens/beansta_home.dart';
 import 'package:blackbeans/screens/recipe_detail.dart';
-import 'package:blackbeans/screens/telateste.dart';
 import 'package:blackbeans/screens/user_profile_screen.dart';
 import 'package:blackbeans/widgets/custom_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:blackbeans/constants/recipe_filters.dart';
 import 'package:ionicons/ionicons.dart';
 
 class RecipesHome extends StatefulWidget {
@@ -21,7 +19,6 @@ class RecipesHome extends StatefulWidget {
 }
 
 class _RecipesHomeState extends State<RecipesHome> {
-
   int _currentIndex = 0;
   bool profileCheck = true;
 
@@ -39,8 +36,7 @@ class _RecipesHomeState extends State<RecipesHome> {
 
   @override
   Widget build(BuildContext context) {
-
-    final recipesRepository = Provider.of<RecipesRepository>(context);
+    final recipesProvider = Provider.of<RecipesProvider>(context);
 
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
@@ -48,12 +44,9 @@ class _RecipesHomeState extends State<RecipesHome> {
         currentIndex: _currentIndex,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        selectedItemColor: Colors.lightBlue[900],
-        unselectedItemColor: Colors.grey[600],
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         selectedLabelStyle: Theme.of(context).textTheme.bodyText1,
         unselectedLabelStyle: Theme.of(context).textTheme.bodyText1,
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Ionicons.home_outline), label: 'Home'),
           BottomNavigationBarItem(
@@ -69,147 +62,169 @@ class _RecipesHomeState extends State<RecipesHome> {
           });
         },
       ),
-      body: _currentIndex == 3 ? UserProfileScreen() : _currentIndex == 2 ? AddItemSelection() : _currentIndex == 1 ? BeanstaHome() : Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              color: Theme.of(context).backgroundColor,
-              padding: const EdgeInsets.fromLTRB(20, 55, 20, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Material(
-                    type: MaterialType.card,
-                    elevation: 8,
-                    shadowColor: Colors.blueGrey.withOpacity(0.4),
-                    color: Theme.of(context).backgroundColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon:
-                              const Icon(Icons.search, color: Colors.black),
-                          hintText: 'Search recipes',
-                          hintStyle: Theme.of(context).textTheme.bodyText1),
-                          onTap: () => showSearch(
-                    context: context,
-                    delegate: CustomSearchDelegate(recipesRepository, recipesRepository.recipeItems)),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FlatButton(
-                          color: recipesRepository.showLunch
-                              ? Colors.blue
-                              : Theme.of(context).buttonColor,
-                          disabledColor: Colors.red,
-                          onPressed: () => recipesRepository.toggleShowLunch(),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text('Lunch',
-                              style: Theme.of(context).textTheme.button)),
-                      const SizedBox(width: 10),
-                      FlatButton(
-                          color: recipesRepository.showDinner
-                              ? Colors.blue
-                              : Theme.of(context).buttonColor,
-                          disabledColor: Colors.red,
-                          onPressed: () {},
-                          child: Text('Dinner',
-                              style: Theme.of(context).textTheme.button),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      const SizedBox(width: 10),
-                      FlatButton(
-                          color: recipesRepository.showPlan
-                              ? Colors.blue
-                              : Theme.of(context).buttonColor,
-                          disabledColor: Colors.red,
-                          onPressed: () {},
-                          child: Text('Plans',
-                              style: Theme.of(context).textTheme.button),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      const SizedBox(width: 10),
-                      FlatButton(
-                          color: recipesRepository.showFave
-                              ? Colors.blue
-                              : Theme.of(context).buttonColor,
-                          disabledColor: Colors.red,
-                          onPressed: () {},
-                          child: Text('Faves',
-                              style: Theme.of(context).textTheme.button),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 2, top: 15),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              left: BorderSide(
-                                  color: Color(0xFF01579B), width: 2))),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text('SUGGESTIONS FOR TODAY',
-                            style: Theme.of(context).textTheme.headline2),
+      body: _currentIndex == 3
+          ? const UserProfileScreen()
+          : _currentIndex == 2
+              ? const AddItemSelection()
+              : _currentIndex == 1
+                  ? const BeanstaHome()
+                  : RecipesMain(recipesProvider: recipesProvider),
+    );
+  }
+}
+
+class RecipesMain extends StatelessWidget {
+  const RecipesMain({
+    Key key,
+    @required this.recipesProvider,
+  }) : super(key: key);
+
+  final RecipesProvider recipesProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          color: Theme.of(context).backgroundColor,
+          padding: const EdgeInsets.fromLTRB(20, 55, 20, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Material(
+                type: MaterialType.card,
+                elevation: 8,
+                shadowColor: Colors.blueGrey.withOpacity(0.4),
+                color: Theme.of(context).cardColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        // color: Colors.black
                       ),
-                    ),
+                      hintText: 'Search recipes',
+                      hintStyle: Theme.of(context).textTheme.bodyText1),
+                  onTap: () => showSearch(
+                      context: context,
+                      delegate:
+                          CustomSearchDelegate(recipesProvider.recipeItems)),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FlatButton(
+                      color: recipesProvider.showLunch
+                          ? Colors.blue
+                          : Theme.of(context).buttonColor,
+                      disabledColor: Colors.red,
+                      onPressed: () => recipesProvider.toggleShowLunch(),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text('Lunch',
+                          style: Theme.of(context).textTheme.button)),
+                  const SizedBox(width: 10),
+                  FlatButton(
+                    color: recipesProvider.showDinner
+                        ? Colors.blue
+                        : Theme.of(context).buttonColor,
+                    disabledColor: Colors.red,
+                    onPressed: () => recipesProvider.toggleShowDinner(),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text('Dinner',
+                        style: Theme.of(context).textTheme.button),
+                  ),
+                  const SizedBox(width: 10),
+                  FlatButton(
+                    color: recipesProvider.showPlan
+                        ? Colors.blue
+                        : Theme.of(context).buttonColor,
+                    disabledColor: Colors.red,
+                    onPressed: () => recipesProvider.toggleShowPlan(),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text('Plans',
+                        style: Theme.of(context).textTheme.button),
+                  ),
+                  const SizedBox(width: 10),
+                  FlatButton(
+                    color: recipesProvider.showFave
+                        ? Colors.blue
+                        : Theme.of(context).buttonColor,
+                    disabledColor: Colors.red,
+                    onPressed: () => recipesProvider.toggleShowFave(),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text('Faves',
+                        style: Theme.of(context).textTheme.button),
                   ),
                 ],
               ),
-            ),
-            Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-                Column(children: [
-                  Container(
-                    height: 130,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: const [
-                        0.4,
-                        0.9,
-                      ],
-                      colors: [
-                        Theme.of(context).backgroundColor,
-                        Theme.of(context).scaffoldBackgroundColor,
-                      ],
-                    )),
+              const SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.only(left: 2, top: 15),
+                child: Container(
+                  decoration: const BoxDecoration(
+                      border: Border(
+                          left:
+                              BorderSide(color: Color(0xFF01579B), width: 2))),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text('SUGGESTIONS FOR TODAY',
+                        style: Theme.of(context).textTheme.headline2),
                   ),
-                  Container(
-                      height: 100,
-                      color: Theme.of(context).scaffoldBackgroundColor)
-                ]),
-                SuggestionsList(recipesRepository: recipesRepository),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 18, top: 4),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('MY COLLECTION',
-                        style: Theme.of(context).textTheme.headline1),
-                    IconButton(icon: const Icon(Ionicons.create_outline), iconSize: 26, onPressed: () => Navigator.of(context).pushNamed(
-                          AddRecipeScreen.routeName)
-                    )
-                  ]),
-            ),
-            Expanded(child: RecipeCollectionList()),
-            // TodayHighlight(deviceWidth: deviceWidth),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Stack(
+          alignment: Alignment.centerLeft,
+          children: [
+            Column(children: [
+              Container(
+                height: 130,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [
+                    0.4,
+                    0.9,
+                  ],
+                  colors: [
+                    Theme.of(context).backgroundColor,
+                    Theme.of(context).scaffoldBackgroundColor,
+                  ],
+                )),
+              ),
+              Container(
+                  height: 100, color: Theme.of(context).scaffoldBackgroundColor)
+            ]),
+            SuggestionsList(recipesProvider: recipesProvider),
           ],
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.only(left: 18, top: 4),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text('MY COLLECTION', style: Theme.of(context).textTheme.headline1),
+            IconButton(
+                icon: const Icon(Ionicons.create_outline),
+                iconSize: 26,
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(AddRecipeScreen.routeName))
+          ]),
+        ),
+        const Expanded(child: RecipeCollectionList()),
+      ],
     );
   }
 }
@@ -217,10 +232,10 @@ class _RecipesHomeState extends State<RecipesHome> {
 class SuggestionsList extends StatelessWidget {
   const SuggestionsList({
     Key key,
-    @required this.recipesRepository,
+    @required this.recipesProvider,
   }) : super(key: key);
 
-  final RecipesRepository recipesRepository;
+  final RecipesProvider recipesProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +245,7 @@ class SuggestionsList extends StatelessWidget {
         height: 190,
         child: ListView(
             scrollDirection: Axis.horizontal,
-            children: recipesRepository.suggestions
+            children: recipesProvider.suggestions
                 .map((e) => GestureDetector(
                       onTap: () => Navigator.of(context)
                           .pushNamed(RecipeDetail.routeName, arguments: e),
@@ -239,7 +254,7 @@ class SuggestionsList extends StatelessWidget {
                         height: 160,
                         width: 140,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).cardColor,
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),
@@ -247,7 +262,7 @@ class SuggestionsList extends StatelessWidget {
                               bottomRight: Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.blueGrey[400].withOpacity(0.2),
+                              color: Theme.of(context).cardTheme.shadowColor,
                               spreadRadius: 2,
                               blurRadius: 5,
                               offset: const Offset(
@@ -303,61 +318,6 @@ class SuggestionsList extends StatelessWidget {
   }
 }
 
-class DestaqueDia extends StatelessWidget {
-  const DestaqueDia({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 240,
-      height: 110,
-      child: Card(
-        elevation: 8,
-        shadowColor: Colors.black,
-        color: Theme.of(context).scaffoldBackgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(width: 15),
-            Container(
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.indigo,
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/images/roasted_lamb.jpeg'))),
-              height: 60,
-              width: 60,
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Receita nome grande demais',
-                      softWrap: true,
-                      style: Theme.of(context).textTheme.subtitle1),
-                  Divider(
-                      height: 15,
-                      thickness: 1,
-                      color: Color(0xFF01579B),
-                      endIndent: 50),
-                  Text('Descricao',
-                      style: Theme.of(context).textTheme.subtitle2)
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class RecipeCollectionList extends StatefulWidget {
   const RecipeCollectionList({
     Key key,
@@ -372,8 +332,8 @@ class _RecipeCollectionListState extends State<RecipeCollectionList> {
 
   @override
   void initState() {
-    _initialRecipes = Provider.of<RecipesRepository>(context, listen: false)
-        .setFetchRecipes();
+    _initialRecipes =
+        Provider.of<RecipesProvider>(context, listen: false).setFetchRecipes();
     super.initState();
   }
 
@@ -387,9 +347,9 @@ class _RecipeCollectionListState extends State<RecipeCollectionList> {
               child: CircularProgressIndicator(),
             );
           } else if (dataSnapshot.hasError) {
-            return const Center(child: Text('Error'));
+            return const Center(child: Text('No recipes yet'));
           } else {
-            return Consumer<RecipesRepository>(
+            return Consumer<RecipesProvider>(
               builder: (ctx, repositoryData, child) {
                 final List<Recipe> recipes = repositoryData.showLunch
                     ? repositoryData.lunchItems
@@ -404,125 +364,104 @@ class _RecipeCollectionListState extends State<RecipeCollectionList> {
                   padding: const EdgeInsets.only(top: 4),
                   shrinkWrap: true,
                   itemCount: recipes.length,
-                  itemBuilder: (ctx, index) => Card(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                    shadowColor: Colors.blueGrey.withOpacity(0.3),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.only(right: 15),
-                      leading: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4),
-                            bottomLeft: Radius.circular(4)),
-                        child: SizedBox(
-                          height: 60,
-                          width: 80,
-                          child: Image.network(recipes[index].mealImage,
-                              fit: BoxFit.cover),
+                  itemBuilder: (ctx, index) => recipes.isEmpty
+                      ? const Center(
+                          child: Text('No data'),
+                        )
+                      : Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 4, horizontal: 8),
+                          shadowColor: Colors.blueGrey.withOpacity(0.3),
+                          child: Dismissible(
+                            key: ValueKey(recipes[index].recipeId),
+                            background: Container(
+                                color: Theme.of(context).errorColor,
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 20),
+                                child: const Icon(Ionicons.trash,
+                                    size: 20, color: Colors.white)),
+                            direction: DismissDirection.endToStart,
+                            confirmDismiss: (direction) {
+                              return showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                        titleTextStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                        title: const Text(
+                                          'This will delete this recipe forever. Are you sure?',
+                                        ),
+                                        actions: [
+                                          FlatButton(
+                                              onPressed:
+                                                  Navigator.of(context).pop,
+                                              child: const Text('Cancel')),
+                                          FlatButton(
+                                              onPressed: () => repositoryData
+                                                  .deleteRecipe(
+                                                      recipeId: recipes[index]
+                                                          .recipeId,
+                                                      imageUrl: recipes[index]
+                                                          .mealImage)
+                                                  .then(Navigator.of(context)
+                                                      .pop),
+                                              child: const Text('OK'))
+                                        ],
+                                      ));
+                            },
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.only(right: 15),
+                              leading: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(4),
+                                    bottomLeft: Radius.circular(4)),
+                                child: SizedBox(
+                                  height: 60,
+                                  width: 80,
+                                  child: Image.network(recipes[index].mealImage,
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
+                              title: Text(recipes[index].mealTitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: Theme.of(context).textTheme.bodyText1),
+                              trailing: Wrap(
+                                spacing: 1,
+                                children: <Widget>[
+                                  IconButton(
+                                      icon: Icon(Icons.favorite,
+                                          size: 16,
+                                          color: recipes[index].isFave
+                                              ? Colors.red
+                                              : Colors.grey),
+                                      onPressed: () =>
+                                          repositoryData.toggleFave(
+                                              id: recipes[index]
+                                                  .recipeId)), // icon-1
+                                  IconButton(
+                                      icon: Icon(Icons.restaurant,
+                                          size: 16,
+                                          color: recipes[index].isPlan
+                                              ? Colors.red
+                                              : Colors.grey),
+                                      onPressed: () =>
+                                          repositoryData.togglePlan(
+                                              id: recipes[index]
+                                                  .recipeId)), // icon-2
+                                ],
+                              ),
+                              onTap: () => Navigator.of(ctx).pushNamed(
+                                  RecipeDetail.routeName,
+                                  arguments: recipes[index]),
+                            ),
+                          ),
                         ),
-                      ),
-                      title: Text(recipes[index].mealTitle,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true,
-                          style: Theme.of(context).textTheme.bodyText1),
-                      trailing: Wrap(
-                        spacing: 1,
-                        children: <Widget>[
-                          IconButton(
-                              icon: Icon(Icons.favorite,
-                                  size: 16,
-                                  color: recipes[index].isFave
-                                      ? Colors.red
-                                      : Colors.grey),
-                              onPressed: () {}), // icon-1
-                          IconButton(
-                              icon: Icon(Icons.restaurant,
-                                  size: 16,
-                                  color: recipes[index].isPlan
-                                      ? Colors.red
-                                      : Colors.grey),
-                              onPressed: () {}), // icon-2
-                        ],
-                      ),
-                      onTap: () => Navigator.of(ctx).pushNamed(
-                          RecipeDetail.routeName,
-                          arguments: recipes[index]),
-                    ),
-                  ),
                 );
               },
             );
           }
         });
-  }
-}
-
-class TodayHighlight extends StatelessWidget {
-  const TodayHighlight({
-    Key key,
-    @required this.deviceWidth,
-  }) : super(key: key);
-
-  final double deviceWidth;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-        margin: const EdgeInsets.only(left: 8, top: 12, right: 8),
-        elevation: 10,
-        shadowColor: Colors.black,
-        // color: Colors.brown[200],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-        child: GestureDetector(
-          onTap: () => Navigator.of(context).pushNamed(RecipeDetail.routeName),
-          child: Stack(
-            children: [
-              Container(
-                height: 300,
-                width: deviceWidth,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage('assets/images/kiyama.jpg'))),
-              ),
-              Container(
-                height: 300,
-                width: deviceWidth,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    gradient: LinearGradient(
-                        begin: FractionalOffset.center,
-                        end: FractionalOffset.bottomCenter,
-                        colors: [
-                          Colors.grey[700].withOpacity(0.0),
-                          Colors.black87,
-                        ],
-                        stops: [
-                          0.0,
-                          1.0
-                        ])),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 200),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: 120,
-                        child: Text('UNI & EGG BOWL',
-                            softWrap: true,
-                            style: Theme.of(context).textTheme.headline3),
-                      ),
-                    ),
-                    Container(height: 2, width: 100, color: Colors.amber),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
   }
 }

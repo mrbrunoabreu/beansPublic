@@ -7,23 +7,34 @@ import 'package:flutter/material.dart';
 class UserRepository with ChangeNotifier {
   String uid;
   String baseUrl = 'https://beans-aa4aa.firebaseio.com/';
+  final String noProfilePic = 'https://i.ibb.co/vJJ4Qs0/nobeans.png';
 
   Profile userProfile;
 
-  Future<void> createProfile({String userName, String userLastName,
-      String userPhotoUrl, String userId}) async {
+  Future<void> createProfile(
+      {String userName,
+      String userLastName,
+      String userPhotoUrl,
+      String userId}) async {
+
+        FirebaseAuth auth = FirebaseAuth.instance;
+
+    final _userId = auth.currentUser.uid;
+
     var dio = Dio();
 
-    final url = '$baseUrl/$userId/userProfile.json';
+    final url = '$baseUrl/$_userId/userProfile.json';
     try {
       final response = await dio.post(url, data: {
         'userName': userName,
         'userLastName': userLastName,
-        'userPhotoUrl': userPhotoUrl
+        'userPhotoUrl': userPhotoUrl ?? noProfilePic
       });
 
       final newProfile = Profile(
-          name: userName, lastName: userLastName, userPhotoUrl: userPhotoUrl);
+          name: userName,
+          lastName: userLastName,
+          userPhotoUrl: userPhotoUrl ?? noProfilePic);
 
       userProfile = newProfile;
       print('created a new profile');
@@ -34,9 +45,11 @@ class UserRepository with ChangeNotifier {
     }
   }
 
-  Future<void> editProfile({String userName, String userLastName,
-      String userPhotoUrl, String userId}) async {
-
+  Future<void> editProfile(
+      {String userName,
+      String userLastName,
+      String userPhotoUrl,
+      String userId}) async {
     var dio = Dio();
 
     final url = '$baseUrl/$userId/userProfile/${userProfile.profileId}.json';
@@ -84,6 +97,12 @@ class UserRepository with ChangeNotifier {
 
       if (_extractedData == null) {
         print('no extracted data');
+        userProfile = Profile(
+            profileId: uid,
+            name: 'User',
+            lastName: '',
+            userPhotoUrl: noProfilePic,
+            email: userEmail);
         return;
       }
       _extractedData.forEach((key, value) {
@@ -92,8 +111,7 @@ class UserRepository with ChangeNotifier {
             name: value['userName'] as String,
             lastName: value['userLastName'] as String,
             userPhotoUrl: value['userPhotoUrl'] as String,
-            email: userEmail
-            );
+            email: userEmail);
       });
       notifyListeners();
     } catch (e) {
@@ -101,25 +119,23 @@ class UserRepository with ChangeNotifier {
     }
   }
 
-  Future<void> _changeEmail(String newEmail) async {
+  Future<void> changeEmail(String newEmail) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     var user = auth.currentUser;
     try {
-      user.updateEmail(newEmail);    
-    } catch(e) {
+      user.updateEmail(newEmail);
+    } catch (e) {
       print(e);
     }
   }
 
-  Future<void> _changePassword(String newPassword) async {
+  Future<void> changePassword(String newPassword) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     var user = auth.currentUser;
     try {
-      user.updatePassword(newPassword);    
-    } catch(e) {
+      user.updatePassword(newPassword);
+    } catch (e) {
       print(e);
     }
   }
-
-
 }

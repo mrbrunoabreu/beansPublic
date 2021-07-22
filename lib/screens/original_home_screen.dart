@@ -1,4 +1,4 @@
-import 'package:blackbeans/bloc/recipes_repository.dart';
+import 'package:blackbeans/bloc/recipes_provider.dart';
 import 'package:blackbeans/screens/recipe_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                       FlatButton(
                           color: Colors.amber,
                           disabledColor: Colors.red,
-                          onPressed: () => Provider.of<RecipesRepository>(context, listen: false).setFetchRecipes(),
+                          onPressed: () => Provider.of<RecipesProvider>(context, listen: false).setFetchRecipes(),
                           child: Text('Lunch'),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),

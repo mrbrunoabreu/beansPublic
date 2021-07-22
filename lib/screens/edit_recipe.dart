@@ -1,4 +1,4 @@
-import 'package:blackbeans/bloc/recipes_repository.dart';
+import 'package:blackbeans/bloc/recipes_provider.dart';
 import 'package:blackbeans/models/recipe.dart';
 import 'package:blackbeans/screens/image_capture_screen.dart';
 import 'package:blackbeans/screens/recipes_home.dart';
@@ -49,7 +49,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
         mealImageUrl.isEmpty ? widget.recipe.mealImage : mealImageUrl;
 
     try {
-      await Provider.of<RecipesRepository>(context, listen: false)
+      await Provider.of<RecipesProvider>(context, listen: false)
           .editRecipe(editedRecipe: editedRecipe, recipeId: widget.recipe.recipeId);
     } catch (error) {
       print(error);

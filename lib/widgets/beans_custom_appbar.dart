@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class BeansCustomAppBar extends StatelessWidget {
   final bool isBackButton;
-  final Icon leadingIcon;
   final String centerTitle;
   final Icon trailingIcon;
+  final Color trailingIconColor;
   final VoidCallback trailingIconAction;
   final Color backgroundColor;
 
   const BeansCustomAppBar({
-    this.isBackButton,
-    this.leadingIcon,
+    this.isBackButton = false,
     this.centerTitle,
     this.trailingIcon,
+    this.trailingIconColor = Colors.blue,
     this.trailingIconAction,
     this.backgroundColor,
     Key key,
@@ -28,13 +28,12 @@ class BeansCustomAppBar extends StatelessWidget {
           children: [
             if (isBackButton)
             Material(
-              color: Colors.white60,
+              color: Theme.of(context).primaryColorDark,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
               child: IconButton(
                 icon: const Icon(
                   Icons.arrow_back_ios_rounded,
-                  color: Colors.black,
                   size: 22,
                 ),
                 onPressed: Navigator.of(context).pop,
@@ -43,7 +42,7 @@ class BeansCustomAppBar extends StatelessWidget {
             const SizedBox(width: 50),
             if (trailingIcon != null)
             Material(
-              color: Colors.white60,
+              color: trailingIconColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
               child: IconButton(

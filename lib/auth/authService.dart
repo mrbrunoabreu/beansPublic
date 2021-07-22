@@ -18,7 +18,7 @@ class AuthService {
     }
   }
 
-  Future<String> signUp({String email, String password}) async {
+  Future<String> signUp({String email, String password, String name, String lastName}) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);

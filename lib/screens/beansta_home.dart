@@ -1,4 +1,5 @@
-import 'package:blackbeans/bloc/beansta_repository.dart';
+import 'package:blackbeans/auth/complete_registration.dart';
+import 'package:blackbeans/bloc/beansta_provider.dart';
 import 'package:blackbeans/bloc/user_repository.dart';
 import 'package:blackbeans/models/beansta_comment.dart';
 import 'package:blackbeans/models/profile.dart';
@@ -37,12 +38,16 @@ class _BeanstaHomeState extends State<BeanstaHome> {
         profileCheck = false;
       });
     }
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    if (user.name == null || user.name == 'User') {
+      return CompleteRegistration();
+    } else {
+      return SafeArea(
       child: StreamBuilder<QuerySnapshot>(
           stream: _beanstaStream,
           builder: (context, snapshot) {
@@ -143,6 +148,7 @@ class _BeanstaHomeState extends State<BeanstaHome> {
                   );
           }),
     );
+    }
   }
 }
 
@@ -200,7 +206,7 @@ class _itemHeader extends StatelessWidget {
                               onPressed: Navigator.of(context).pop,
                               child: Text('Cancel')),
                           FlatButton(
-                              onPressed: () => Provider.of<BeanstaRepository>(
+                              onPressed: () => Provider.of<BeanstaProvider>(
                                       context,
                                       listen: false)
                                   .deletePhotoItem(
