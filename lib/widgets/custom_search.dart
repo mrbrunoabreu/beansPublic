@@ -1,31 +1,28 @@
+import 'package:blackbeans/bloc/recipes_provider.dart';
 import 'package:blackbeans/models/recipe.dart';
 import 'package:blackbeans/screens/recipe_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
-
 class CustomSearchDelegate extends SearchDelegate {
-  final recipeProvider;
+  final RecipesProvider recipeProvider = RecipesProvider();
   final List<Recipe> recipeData;
 
   List suggestion = ['Please add a meal first', 'Nonono'];
 
-  CustomSearchDelegate(this.recipeProvider, this.recipeData);
+  CustomSearchDelegate(this.recipeData);
 
-  List<Recipe> searchResult = List();
+  List<Recipe> searchResult = [];
 
   @override
-ThemeData appBarTheme(BuildContext context) {
-return ThemeData(
-  primaryColor: Colors.white,
-  appBarTheme: AppBarTheme(
-    elevation: 0.0,
-    color: Colors.black12,
-
-  )
-
-);
-}
+  ThemeData appBarTheme(BuildContext context) {
+    return ThemeData(
+        primaryColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          elevation: 0.0,
+          color: Colors.black12,
+        ));
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -57,15 +54,14 @@ return ThemeData(
             element.mealTitle.toLowerCase().contains(query.toLowerCase()))
         .toList();
     return Container(
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       child: ListView(
-          padding: EdgeInsets.only(top: 8, bottom: 8),
-          scrollDirection: Axis.vertical,
+          padding: const EdgeInsets.only(top: 8, bottom: 8),
           children: List.generate(searchResult.length, (index) {
-            var item = searchResult[index];
+            final item = searchResult[index];
             return ListTile(
-              contentPadding: EdgeInsets.only(right: 15),
-              leading: Container(
+              contentPadding: const EdgeInsets.only(right: 15),
+              leading: SizedBox(
                 width: 80,
                 height: 60,
                 child: item.mealImage != null
@@ -74,7 +70,7 @@ return ThemeData(
               ),
               title: Text(
                 item.mealTitle,
-                style: TextStyle(fontSize: 14),
+                style: const TextStyle(fontSize: 14),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
               ),
@@ -90,14 +86,14 @@ return ThemeData(
                         color: item.isFave ? Colors.red : Colors.grey,
                       ),
                       onPressed: () {
-                        recipeProvider.toggleFave(item);
+                        recipeProvider.toggleFave(id: item.recipeId);
                       }), // icon-1
                   IconButton(
                       icon: Icon(Icons.restaurant,
                           size: 16,
                           color: item.isPlan ? Colors.red : Colors.grey),
                       onPressed: () {
-                        recipeProvider.togglePlan(item);
+                        recipeProvider.togglePlan(id: item.recipeId);
                       }), // icon-2
                 ],
               ),
@@ -129,12 +125,13 @@ return ThemeData(
         leading: Icon(query.isEmpty ? Icons.history : Icons.search),
         title: RichText(
             text: TextSpan(
-                text:
-                    suggestionList[index].mealTitle.substring(0, query.length) as String,
+                text: suggestionList[index].mealTitle.substring(0, query.length)
+                    as String,
                 style: Theme.of(context).textTheme.bodyText1,
                 children: [
               TextSpan(
-                text: suggestionList[index].mealTitle.substring(query.length) as String,
+                text: suggestionList[index].mealTitle.substring(query.length)
+                    as String,
               )
             ])),
       ),

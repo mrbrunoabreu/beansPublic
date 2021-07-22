@@ -22,27 +22,40 @@ class _LoginPageState extends State<LoginPage> {
             image: AssetImage("assets/images/login-bg.jpg"), fit: BoxFit.cover),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 70),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Welcome to BEANS',
-                style: Theme.of(context).textTheme.headline1,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1
+                    .copyWith(color: Colors.black),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 18),
               SizedBox(
                 child: Column(children: [
                   TextField(
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: Colors.black),
                       controller: emailController,
-                      decoration: const InputDecoration(labelText: 'Email')),
+                      decoration: const InputDecoration(
+                          labelText: 'Email',
+                          labelStyle: TextStyle(color: Colors.black))),
                   TextField(
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: Colors.black),
                       obscureText: true,
                       controller: passwordController,
-                      decoration: const InputDecoration(labelText: 'Password')),
+                      decoration: const InputDecoration(
+                          labelText: 'Password',
+                          labelStyle: TextStyle(color: Colors.black))),
                   SizedBox(height: 30),
                   RaisedButton(
                     shape: RoundedRectangleBorder(

@@ -1,6 +1,7 @@
+import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -21,12 +22,11 @@ class _ImageUploaderState extends State<ImageUploader> {
   UploadTask _uploadTask;
   String uid = '';
 
-  void _startUpload() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
+  Future<void> _startUpload() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
 
-    var user = auth.currentUser;
+    final user = auth.currentUser;
 
-    // var user = await FirebaseAuth.instance.currentUser();
     if (user != null) {
       uid = user.uid;
     }
@@ -39,14 +39,13 @@ class _ImageUploaderState extends State<ImageUploader> {
       // e.g, e.code == 'canceled'
     }
 
-    String filePath = 'images/$uid/${widget.fileName}';
+    final String filePath = 'images/$uid/${widget.fileName}';
 
     setState(() {
       _uploadTask = _storage.ref().child(filePath).putFile(widget.file);
     });
-    TaskSnapshot taskSnapshot = await _uploadTask.whenComplete(() {});
+    final TaskSnapshot taskSnapshot = await _uploadTask.whenComplete(() {});
     final String imageUrl = await taskSnapshot.ref.getDownloadURL();
-    print(imageUrl);
     Navigator.of(context).pop(imageUrl);
   }
 
@@ -62,15 +61,15 @@ class _ImageUploaderState extends State<ImageUploader> {
             return Column(
               children: [
                 if (_uploadTask.snapshot.state == TaskState.success)
-                  Text('Finished'),
+                  const Text('Finished'),
                 if (_uploadTask.snapshot.state == TaskState.paused)
                   FlatButton(
                       onPressed: () => _uploadTask.resume(),
-                      child: Icon(Ionicons.play)),
+                      child: const Icon(Ionicons.play)),
                 if (_uploadTask.snapshot.state == TaskState.running)
                   FlatButton(
                       onPressed: () => _uploadTask.pause(),
-                      child: Icon(Ionicons.pause)),
+                      child: const Icon(Ionicons.pause)),
                 LinearProgressIndicator(value: progressPercent),
                 Text('${(progressPercent * 100).toStringAsFixed(2)} %',
                     style: Theme.of(context).textTheme.bodyText2)
@@ -80,8 +79,8 @@ class _ImageUploaderState extends State<ImageUploader> {
     } else {
       return FlatButton.icon(
           onPressed: _startUpload,
-          icon: Icon(Ionicons.cloud_upload),
-          label: Text('Upload image'));
+          icon: const Icon(Ionicons.cloud_upload),
+          label: const Text('Upload image'));
     }
   }
 }

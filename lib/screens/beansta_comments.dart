@@ -1,4 +1,4 @@
-import 'package:blackbeans/bloc/beansta_repository.dart';
+import 'package:blackbeans/bloc/beansta_provider.dart';
 import 'package:blackbeans/models/beansta_comment.dart';
 import 'package:blackbeans/screens/beansta_add_photo.dart';
 import 'package:blackbeans/widgets/beans_custom_appbar.dart';
@@ -25,7 +25,7 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
     }
     _formKey.currentState.save();
     try {
-      await Provider.of<BeanstaRepository>(context, listen: false)
+      await Provider.of<BeanstaProvider>(context, listen: false)
           .addComment(comment: _newComment, item: item, author: author);
     } catch (error) {
       print(error);

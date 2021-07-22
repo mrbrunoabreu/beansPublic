@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 
 class PickTags extends StatefulWidget {
 
-  ///[onTag] must not be [null] and should be implemented
   final void Function(String tag) onTag;
-
-  ///[onDelete] must not be [null]
   final void Function(String tag) onDelete;
-
-  ///[initialTags] are optional initial tags you can enter
   final List<String> initialTags;
 
   const PickTags({
@@ -24,8 +19,8 @@ class PickTags extends StatefulWidget {
 
 class _TextFieldTagsState extends State<PickTags> {
   List<String> _tagsStringContent = [];
-  TextEditingController _textEditingController = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  final TextEditingController _textEditingController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   bool _showPrefixIcon = false;
   double _deviceWidth;
 
@@ -54,7 +49,7 @@ class _TextFieldTagsState extends State<PickTags> {
   List<Widget> get _getTags {
     List<Widget> _tags = [];
     for (var i = 0; i < _tagsStringContent.length; i++) {
-      String tagText = _tagsStringContent[i];
+      final String tagText = _tagsStringContent[i];
       var tag = Container(
         padding: const EdgeInsets.all(8),
         child: Row(
@@ -66,9 +61,9 @@ class _TextFieldTagsState extends State<PickTags> {
             ),
             GestureDetector(
                 onTap: () {
-                  if (widget.onDelete != null)
+                  if (widget.onDelete != null) {
                     widget.onDelete(_tagsStringContent[i]);
-
+                  }
                   if (_tagsStringContent.length == 1 && _showPrefixIcon) {
                     setState(() {
                       _tagsStringContent.remove(_tagsStringContent[i]);
@@ -130,7 +125,7 @@ class _TextFieldTagsState extends State<PickTags> {
       ),
       onSubmitted: (value) {
         var val = value.trim().toLowerCase();
-        if (value.length > 0) {
+        if (value.isEmpty) {
           _textEditingController.clear();
           if (!_tagsStringContent.contains(val)) {
             widget.onTag(val);

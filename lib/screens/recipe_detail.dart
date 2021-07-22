@@ -55,7 +55,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
           maxChildSize: 0.8,
           builder: (context, scrollcontroller) => Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).backgroundColor,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(20),
                   topLeft: Radius.circular(20),

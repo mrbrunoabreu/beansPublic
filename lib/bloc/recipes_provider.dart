@@ -1,9 +1,10 @@
 import 'package:blackbeans/models/recipe.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-class RecipesRepository with ChangeNotifier {
+class RecipesProvider with ChangeNotifier {
   String baseUrl = 'https://beans-aa4aa.firebaseio.com/';
 
   String uid;
@@ -31,11 +32,11 @@ class RecipesRepository with ChangeNotifier {
       recipeItems.where((element) => element.isPlan).toList();
   List<Recipe> get faveItems =>
       recipeItems.where((element) => element.isFave).toList();
-      
+
   List<Recipe> get suggestions {
-    List<Recipe> randomList = recipeItems;
+    final List<Recipe> randomList = recipeItems;
     randomList.shuffle();
-    var trimmedRandom = randomList.take(5);
+    final trimmedRandom = randomList.take(5);
     return trimmedRandom.toList();
   }
 
@@ -76,8 +77,6 @@ class RecipesRepository with ChangeNotifier {
     }
   }
 
-  Future<void> getFiveLatestRecipes() {}
-
   void toggleShowLunch() {
     showLunch = !showLunch;
     showDinner = false;
@@ -111,27 +110,26 @@ class RecipesRepository with ChangeNotifier {
   }
 
   Future<void> addRecipe(Recipe newRecipe) async {
-
-    newRecipe.mealImage ??= 'https://firebasestorage.googleapis.com/v0/b/beans-aa4aa.appspot.com/o/images/empty-dish.jpg';
+    newRecipe.mealImage ??=
+        'https://firebasestorage.googleapis.com/v0/b/beans-aa4aa.appspot.com/o/images/empty-dish.jpg';
 
     final Dio dio = Dio();
     final url = '$baseUrl/$uid/recipes.json';
-    
+
     try {
-      final response = await dio.post(url,
-          data: {
-            'creatorId': uid,
-            'creationDate': DateTime.now().toIso8601String(),
-            'mealTitle': newRecipe.mealTitle,
-            'mealDescription': newRecipe.mealDescription,
-            'mealImage': newRecipe.mealImage,
-            'mealInstructions': newRecipe.mealInstructions ?? '',
-            'isLunch': newRecipe.isLunch,
-            'isDinner': newRecipe.isDinner,
-            'isPlan': false,
-            'isFave': false,
-            'recipeTags': newRecipe.recipeTags ?? ['Nothing']
-          });
+      final response = await dio.post(url, data: {
+        'creatorId': uid,
+        'creationDate': DateTime.now().toIso8601String(),
+        'mealTitle': newRecipe.mealTitle,
+        'mealDescription': newRecipe.mealDescription,
+        'mealImage': newRecipe.mealImage,
+        'mealInstructions': newRecipe.mealInstructions ?? '',
+        'isLunch': newRecipe.isLunch,
+        'isDinner': newRecipe.isDinner,
+        'isPlan': false,
+        'isFave': false,
+        'recipeTags': newRecipe.recipeTags ?? ['Nothing']
+      });
 
       final createdRecipe = Recipe(
           recipeId: response.data['recipeId'] as String,
@@ -146,8 +144,32 @@ class RecipesRepository with ChangeNotifier {
           isFave: false,
           recipeTags: newRecipe.recipeTags ?? ['Nothing']);
       _recipeItems.add(createdRecipe);
-      print(createdRecipe.recipeTags[0]);
-      print(newRecipe.mealTitle);
+      notifyListeners();
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> deleteRecipe({String recipeId, String imageUrl}) async {
+    final Dio dio = Dio();
+    final url = '$baseUrl/$uid/recipes/$recipeId.json';
+
+    try {
+      dio.delete(url);
+      final mealIndex =
+          _recipeItems.indexWhere((element) => element.recipeId == recipeId);
+
+      final FirebaseStorage storage =
+          FirebaseStorage.instanceFor(bucket: 'gs://beans-aa4aa.appspot.com');
+      final imagePath = imageUrl;
+      final pathTrim = imagePath.substring(0, imagePath.indexOf('?'));
+      final jpgSection = pathTrim.substring(pathTrim.indexOf('image_picker'));
+      final completeUrl = 'images/$uid/$jpgSection';
+      final imageRef = storage.ref().child(completeUrl);
+      imageRef.delete();
+
+      _recipeItems.removeAt(mealIndex);
+
       notifyListeners();
     } catch (error) {
       print(error);
@@ -155,23 +177,19 @@ class RecipesRepository with ChangeNotifier {
   }
 
   Future<void> editRecipe({Recipe editedRecipe, String recipeId}) async {
-
-    print('id da receita: $recipeId');
-
     final Dio dio = Dio();
     final url = '$baseUrl/$uid/recipes/$recipeId.json';
 
     try {
-      final response = await dio.patch(url,
-          data: {
-            'mealTitle': editedRecipe.mealTitle,
-            'mealDescription': editedRecipe.mealDescription,
-            'mealImage': editedRecipe.mealImage,
-            'mealInstructions': editedRecipe.mealInstructions ?? null,
-            'isLunch': editedRecipe.isLunch,
-            'isDinner': editedRecipe.isDinner,
-            'recipeTags': editedRecipe.recipeTags
-          });
+      final response = await dio.patch(url, data: {
+        'mealTitle': editedRecipe.mealTitle,
+        'mealDescription': editedRecipe.mealDescription,
+        'mealImage': editedRecipe.mealImage,
+        'mealInstructions': editedRecipe.mealInstructions ?? null,
+        'isLunch': editedRecipe.isLunch,
+        'isDinner': editedRecipe.isDinner,
+        'recipeTags': editedRecipe.recipeTags
+      });
 
       final newRecipe = Recipe(
           recipeId: recipeId,
@@ -186,8 +204,8 @@ class RecipesRepository with ChangeNotifier {
           isFave: false,
           recipeTags: editedRecipe.recipeTags ?? ['Nothing']);
 
-      final recipeToEditIndex =
-          _recipeItems.indexWhere((element) => element.recipeId == editedRecipe.recipeId);
+      final recipeToEditIndex = _recipeItems
+          .indexWhere((element) => element.recipeId == editedRecipe.recipeId);
 
       if (recipeToEditIndex >= 0) {
         _recipeItems[recipeToEditIndex] = newRecipe;
@@ -198,9 +216,37 @@ class RecipesRepository with ChangeNotifier {
     }
   }
 
-  // Future<void> saveForm({Recipe newRecipe, List<String> tags}) async {
-  //   newRecipe.recipeTags = tags;
-  //   addRecipe(newRecipe);
-  // }
+  Future<void> toggleFave({String id}) async {
+    final Dio dio = Dio();
+    final url = '$baseUrl/$uid/recipes/$id.json';
 
+    try {
+      final Response response = await dio.get(url);
+      bool oldStatus = response.data['isFave'] as bool;
+      final changed = await dio.patch(url, data: {'isFave': !oldStatus});
+    } catch (error) {
+      print(error);
+    }
+
+    _recipeItems.forEach((element) =>
+        {if (element.recipeId == id) element.isFave = !element.isFave});
+    notifyListeners();
+  }
+
+  Future<void> togglePlan({String id}) async {
+    final Dio dio = Dio();
+    final url = '$baseUrl/$uid/recipes/$id.json';
+
+    try {
+      final Response response = await dio.get(url);
+      bool oldStatus = response.data['isPlan'] as bool;
+      final changed = await dio.patch(url, data: {'isPlan': !oldStatus});
+    } catch (error) {
+      print(error);
+    }
+
+    _recipeItems.forEach((element) =>
+        {if (element.recipeId == id) element.isPlan = !element.isPlan});
+    notifyListeners();
+  }
 }
