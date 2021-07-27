@@ -40,6 +40,45 @@ class RecipesProvider with ChangeNotifier {
     return trimmedRandom.toList();
   }
 
+  List<Recipe> todaysSuggestions;
+
+  Future<void> staffSuggestions() async {
+
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    var _url = '$baseUrl/UJ8kdSL4DXdSdfLKMB9jXDADCAw1/recipes.json';
+
+    final Dio dio = Dio();
+
+    final Response response = await dio.get(_url);
+
+    if (response.statusCode == 200) {
+      final extractedData = response.data as Map<String, dynamic>;
+      List<Recipe> _newData = [];
+      extractedData.forEach((recipeId, recipeData) {
+        _newData.add(Recipe(
+            recipeId: recipeId,
+            creatorId: recipeData['creatorId'] as String,
+            creationDate: recipeData['creationDate'] as String,
+            mealTitle: recipeData['mealTitle'] as String,
+            mealDescription: recipeData['mealDescription'] as String,
+            mealInstructions: recipeData['mealInstructions'] as String,
+            mealImage: recipeData['mealImage'] as String,
+            isLunch: recipeData['isLunch'] as bool,
+            isDinner: recipeData['isDinner'] as bool,
+            isPlan: recipeData['isPlan'] as bool,
+            isFave: recipeData['isFave'] as bool,
+            recipeTags: recipeData['recipeTags'] as List<dynamic>));
+      });
+      _newData.shuffle();
+      final trimmedRandom = _newData.take(5);
+      todaysSuggestions = trimmedRandom.toList();
+    } else {
+      throw Exception('Failed to load suggestions');
+    }
+
+    
+  }
+
   bool showDinner = false;
   bool showLunch = false;
   bool showPlan = false;
@@ -53,12 +92,13 @@ class RecipesProvider with ChangeNotifier {
 
     var url = '$baseUrl/$uid/recipes.json';
 
-    try {
-      final Response response = await dio.get(url);
-      final extractedData = response.data as Map<String, dynamic>;
+    final Response response = await dio.get(url);
 
+    if (response.statusCode == 200) {
+      final extractedData = response.data as Map<String, dynamic>;
+      List<Recipe> _newData = [];
       extractedData.forEach((recipeId, recipeData) {
-        _recipeItems.add(Recipe(
+        _newData.add(Recipe(
             recipeId: recipeId,
             creatorId: uid,
             creationDate: recipeData['creationDate'] as String,
@@ -72,8 +112,9 @@ class RecipesProvider with ChangeNotifier {
             isFave: recipeData['isFave'] as bool,
             recipeTags: recipeData['recipeTags'] as List<dynamic>));
       });
-    } catch (e) {
-      print(e.message);
+      _recipeItems = _newData;
+    } else {
+      throw Exception('Failed to load recipes');
     }
   }
 

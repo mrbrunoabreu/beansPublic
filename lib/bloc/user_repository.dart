@@ -16,8 +16,7 @@ class UserRepository with ChangeNotifier {
       String userLastName,
       String userPhotoUrl,
       String userId}) async {
-
-        FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
 
     final _userId = auth.currentUser.uid;
 
@@ -52,7 +51,7 @@ class UserRepository with ChangeNotifier {
       String userId}) async {
     var dio = Dio();
 
-    final url = '$baseUrl/$userId/userProfile/${userProfile.profileId}.json';
+    final url = '$baseUrl/$uid/userProfile/${userProfile.profileId}.json';
     try {
       final response = await dio.patch(url, data: {
         'userName': userName,

@@ -1,15 +1,10 @@
-import 'package:blackbeans/bloc/user_repository.dart';
 import 'package:blackbeans/models/beansta_photo.dart';
 import 'package:blackbeans/models/profile.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class BeanstaProvider with ChangeNotifier {
   final String baseUrl = 'https://beans-aa4aa.firebaseio.com/';
@@ -226,4 +221,5 @@ class BeanstaProvider with ChangeNotifier {
   //     print(e);
   //   }
   // }
+
 }

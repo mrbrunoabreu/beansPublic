@@ -1,6 +1,5 @@
 import 'package:blackbeans/bloc/beansta_provider.dart';
 import 'package:blackbeans/models/beansta_comment.dart';
-import 'package:blackbeans/screens/beansta_add_photo.dart';
 import 'package:blackbeans/widgets/beans_custom_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,6 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final _subtitleFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,7 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
     return Scaffold(
       body: Column(
         children: [
-          BeansCustomAppBar(
+          const BeansCustomAppBar(
             isBackButton: true,
           ),
           _commentsStream(args.itemId),
@@ -76,7 +74,7 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
                           decoration: InputDecoration(
                               hintText: 'Enter your comment',
                               suffixIcon: IconButton(
-                                icon: Icon(Ionicons.send),
+                                icon: const Icon(Ionicons.send),
                                 onPressed: () {
                                   _saveForm(item: args.itemId, author: args.commentAuthor);
                                   // _formKey.currentState.reset();
@@ -113,7 +111,7 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
             return snapshot.connectionState == ConnectionState.waiting
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: snapshot.data.docs.length,
                     itemBuilder: (ctx, e) {

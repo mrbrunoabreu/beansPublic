@@ -1,7 +1,9 @@
 import 'package:blackbeans/bloc/user_repository.dart';
 import 'package:blackbeans/models/profile.dart';
+import 'package:blackbeans/screens/image_capture_screen.dart';
 import 'package:blackbeans/screens/reset_password.dart';
 import 'package:blackbeans/screens/user_profile_screen.dart';
+import 'package:blackbeans/widgets/beans_custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +19,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  String newProfilePhotoUrl;
 
   final _formKey = GlobalKey<FormState>();
   final _firstNameFocus = FocusNode();
@@ -24,7 +27,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
   Profile editedProfile = Profile();
-
 
   Future<void> _saveForm(Profile editedProfile) async {
     final isValid = _formKey.currentState.validate();
@@ -34,8 +36,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     _formKey.currentState.save();
 
-
     try {
+      Provider.of<UserRepository>(context, listen: false).editProfile(
+          userName: editedProfile.name,
+          userLastName: editedProfile.lastName,
+          userPhotoUrl: editedProfile.userPhotoUrl);
     } catch (error) {
       print(error);
     }
@@ -79,41 +84,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Material(
-                          color: Colors.white60,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          child: IconButton(
-                            icon: const Icon(
-                              Ionicons.chevron_back,
-                              color: Colors.black,
-                              size: 22,
-                            ),
-                            onPressed: Navigator.of(context).pop,
-                          ),
-                        ),
-                        Material(
-                          color: Colors.lightBlueAccent,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          child: IconButton(
-                            icon: const Icon(
-                              Ionicons.checkmark,
-                              color: Colors.white,
-                              size: 22,
-                            ),
-                            onPressed: () {},
-                          ),
-                        )
-                      ],
-                    ),
+                    child: BeansCustomAppBar(
+                  isBackButton: true,
+                  trailingIcon: const Icon(
+                    Ionicons.checkmark,
+                    size: 22,
                   ),
-                ),
+                  trailingIconAction: () => _saveForm(editedProfile),
+                )
+
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Material(
+                    //       color: Colors.white60,
+                    //       shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(15)),
+                    //       child: IconButton(
+                    //         icon: const Icon(
+                    //           Ionicons.chevron_back,
+                    //           color: Colors.black,
+                    //           size: 22,
+                    //         ),
+                    //         onPressed: Navigator.of(context).pop,
+                    //       ),
+                    //     ),
+                    //     Material(
+                    //       color: Colors.lightBlueAccent,
+                    //       shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(15)),
+                    //       child: IconButton(
+                    //         icon: const Icon(
+                    //           Ionicons.checkmark,
+                    //           color: Colors.white,
+                    //           size: 22,
+                    //         ),
+                    //         onPressed: () {},
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
+                    ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
@@ -174,7 +185,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 return null;
                               },
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             TextFormField(
                               style: Theme.of(context).textTheme.bodyText1,
                               focusNode: _emailFocus,
@@ -196,10 +207,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 return null;
                               },
                             ),
-                            SizedBox(height: 15),
-                            FlatButton(onPressed: () => Navigator.of(context).pushNamed(ResetPasswordScreen.routeName), child: Text('Reset your password?')),
+                            const SizedBox(height: 15),
+                            FlatButton(
+                                onPressed: () => Navigator.of(context)
+                                    .pushNamed(ResetPasswordScreen.routeName),
+                                child: const Text('Reset your password?')),
                             const SizedBox(height: 15),
                             InkWell(
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed(ImageCaptureScreen.routeName)
+                                  .then((value) {
+                                setState(() {
+                                  newProfilePhotoUrl = value as String;
+                                  editedProfile.userPhotoUrl =
+                                      newProfilePhotoUrl;
+                                });
+                              }),
                               child: Container(
                                   height: 50,
                                   width: 50,
@@ -207,9 +230,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       color: Colors.blueGrey[200],
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(14))),
-                                  child: Image.network(widget.currentProfile.userPhotoUrl)),
-                              onTap: () {},
-                              ),
+                                  child: Image.network(
+                                      widget.currentProfile.userPhotoUrl)),
+                            ),
                             const SizedBox(height: 10),
                             Text(
                               'Pick an image',

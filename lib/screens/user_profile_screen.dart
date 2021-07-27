@@ -49,107 +49,108 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           Theme.of(context).scaffoldBackgroundColor,
         ],
       )),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FutureBuilder(
-              future: _userProfile,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                      child: CircularProgressIndicator());
-                } else {
-                  return Consumer<UserRepository>(
-                    builder: (ctx, repositoryData, child) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 100),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 40,
-                                  backgroundImage: NetworkImage(
-                                      repositoryData.userProfile.userPhotoUrl),
-                                ),
-                                const SizedBox(width: 14),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Welcome,',
-                                      style:
-                                          Theme.of(context).textTheme.headline1,
-                                    ),
-                                    Text(
-                                      '${repositoryData.userProfile.name} ${repositoryData.userProfile.lastName}',
-                                      style:
-                                          Theme.of(context).textTheme.headline2,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 40),
-                            Text('Settings',
-                                style: Theme.of(context).textTheme.headline2),
-                            const SizedBox(height: 20),
-                            SettingsItem(
-                              iconShapeColor: Colors.purple[50],
-                              iconColor: Colors.purple,
-                              icon: Ionicons.finger_print,
-                              settingsTitle: 'Your info',
-                              onPressedAction: () =>
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => EditProfileScreen(
-                                            currentProfile:
-                                                repositoryData.userProfile,
-                                          ))),
-                            ),
-                            const SizedBox(height: 20),
-                            Consumer<SwitchTheme>(
-                              builder: (context, switchTheme, child) =>
-                                  SettingsItem(
-                                      iconShapeColor: Colors.lightBlue[50],
-                                      iconColor: Colors.lightBlue,
-                                      icon: Ionicons.moon,
-                                      settingsTitle: 'Dark Mode',
-                                      onPressedAction: () =>
-                                          switchTheme.toggleTheme()),
-                            ),
-                            const SizedBox(height: 20),
-                            SettingsItem(
-                              iconShapeColor: Colors.orange[50],
-                              iconColor: Colors.orange,
-                              icon: Ionicons.earth,
-                              settingsTitle: 'Language',
-                            ),
-                            const SizedBox(height: 20),
-                            SettingsItem(
-                              iconShapeColor: Colors.red[50],
-                              iconColor: Colors.red,
-                              icon: Ionicons.exit_outline,
-                              settingsTitle: 'Log out',
-                              onPressedAction: () => buildShowDialog(
-                                  context: context,
-                                  alertMessage:
-                                      'Are you sure you want to log out?',
-                                  onConfirm: () {
-                                    FirebaseAuth.instance.signOut();
-                                    Navigator.pop(context);
-                                  }),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                }
-              }),
-        ],
-      ),
+      child: FutureBuilder(
+          future: _userProfile,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Consumer<UserRepository>(
+                      builder: (ctx, repositoryData, child) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 100),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 40,
+                                    backgroundImage: NetworkImage(repositoryData
+                                        .userProfile.userPhotoUrl),
+                                  ),
+                                  const SizedBox(width: 14),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Welcome,',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline1,
+                                      ),
+                                      Text(
+                                        '${repositoryData.userProfile.name} ${repositoryData.userProfile.lastName}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline2,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 40),
+                              Text('Settings',
+                                  style: Theme.of(context).textTheme.headline2),
+                              const SizedBox(height: 20),
+                              SettingsItem(
+                                iconShapeColor: Colors.purple[50],
+                                iconColor: Colors.purple,
+                                icon: Ionicons.finger_print,
+                                settingsTitle: 'Your info',
+                                onPressedAction: () => Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                        builder: (context) => EditProfileScreen(
+                                              currentProfile:
+                                                  repositoryData.userProfile,
+                                            ))),
+                              ),
+                              const SizedBox(height: 20),
+                              Consumer<SwitchTheme>(
+                                builder: (context, switchTheme, child) =>
+                                    SettingsItem(
+                                        iconShapeColor: Colors.lightBlue[50],
+                                        iconColor: Colors.lightBlue,
+                                        icon: Ionicons.moon,
+                                        settingsTitle: 'Dark Mode',
+                                        onPressedAction: () =>
+                                            switchTheme.toggleTheme()),
+                              ),
+                              const SizedBox(height: 20),
+                              SettingsItem(
+                                iconShapeColor: Colors.orange[50],
+                                iconColor: Colors.orange,
+                                icon: Ionicons.earth,
+                                settingsTitle: 'Language',
+                              ),
+                              const SizedBox(height: 20),
+                              SettingsItem(
+                                iconShapeColor: Colors.red[50],
+                                iconColor: Colors.red,
+                                icon: Ionicons.exit_outline,
+                                settingsTitle: 'Log out',
+                                onPressedAction: () => buildShowDialog(
+                                    context: context,
+                                    alertMessage:
+                                        'Are you sure you want to log out?',
+                                    onConfirm: () {
+                                      FirebaseAuth.instance.signOut();
+                                      Navigator.pop(context);
+                                    }),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  ]);
+            }
+          }),
     );
   }
 
