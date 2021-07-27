@@ -96,7 +96,7 @@ class AppTheme {
       accentColor: Colors.blue,
       primarySwatch: Colors.blue,
       primaryColorDark: const Color(0xFF36364b),
-      buttonColor: Colors.lightBlue[900],
+      buttonColor: Colors.lightBlue,
       scaffoldBackgroundColor: const Color(0xFF1c1c28),
       backgroundColor: const Color(0xFF121219),
       cardColor: const Color(0xFF2e2e41),

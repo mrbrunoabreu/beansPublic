@@ -1,6 +1,6 @@
+import 'dart:io';
 import 'package:blackbeans/widgets/image_uploader.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
@@ -30,10 +30,10 @@ class _ImageCaptureScreenState extends State<ImageCaptureScreen> {
   }
 
   Future<void> _cropImage() async {
-    File cropped = await ImageCropper.cropImage(
+    final File cropped = await ImageCropper.cropImage(
         sourcePath: _imageFile.path,
         cropStyle: CropStyle.rectangle,
-        aspectRatio: CropAspectRatio(ratioX: 800, ratioY: 800));
+        aspectRatio: const CropAspectRatio(ratioX: 800, ratioY: 800));
 
     setState(() {
       _imageFile = cropped ?? _imageFile;
@@ -53,7 +53,7 @@ class _ImageCaptureScreenState extends State<ImageCaptureScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: IconButton(
-            icon: Icon(Ionicons.arrow_back, color: Colors.black),
+            icon: const Icon(Ionicons.arrow_back, color: Colors.black),
             onPressed: Navigator.of(context).pop),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -61,28 +61,28 @@ class _ImageCaptureScreenState extends State<ImageCaptureScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
-              icon: Icon(Ionicons.camera),
+              icon: const Icon(Ionicons.camera),
               onPressed: () =>
                   _pickImage(ImageSource.camera).then((_) => _cropImage())),
           IconButton(
-              icon: Icon(Ionicons.images),
+              icon: const Icon(Ionicons.images),
               onPressed: () =>
                   _pickImage(ImageSource.gallery).then((_) => _cropImage()))
         ],
       )),
       body: ListView(children: [
         if (_imageFile != null) ...[
-          Container(width: 400, height: 400, child: Image.file(_imageFile)),
+          SizedBox(width: 400, height: 400, child: Image.file(_imageFile)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               FlatButton(
-                  onPressed: () => _cropImage(), child: Icon(Ionicons.crop)),
+                  onPressed: () => _cropImage(), child: const Icon(Ionicons.crop)),
               FlatButton(
-                  onPressed: () => _clear(), child: Icon(Ionicons.reload))
+                  onPressed: () => _clear(), child: const Icon(Ionicons.reload))
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           ImageUploader(file: _imageFile, fileName: fileName)
         ]
       ]),

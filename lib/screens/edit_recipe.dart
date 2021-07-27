@@ -22,10 +22,10 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   final _formKey = GlobalKey<FormState>();
   final _subtitleFocus = FocusNode();
   final _recipeFocus = FocusNode();
-  List<String> _createdTags = [];
+  final List<String> _createdTags = [];
 
   String mealImageUrl;
-  Recipe _editedRecipe = Recipe(
+  final Recipe _editedRecipe = Recipe(
       recipeId: '',
       creatorId: '',
       mealImage: '',
@@ -49,8 +49,8 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
         mealImageUrl.isEmpty ? widget.recipe.mealImage : mealImageUrl;
 
     try {
-      await Provider.of<RecipesProvider>(context, listen: false)
-          .editRecipe(editedRecipe: editedRecipe, recipeId: widget.recipe.recipeId);
+      await Provider.of<RecipesProvider>(context, listen: false).editRecipe(
+          editedRecipe: editedRecipe, recipeId: widget.recipe.recipeId);
     } catch (error) {
       print(error);
     }
@@ -255,6 +255,14 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                                   });
                                 }),
                             InkWell(
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed(ImageCaptureScreen.routeName)
+                                  .then((value) {
+                                setState(() {
+                                  mealImageUrl = value as String;
+                                  _editedRecipe.mealImage = mealImageUrl;
+                                });
+                              }),
                               child: Container(
                                   height: 50,
                                   width: 50,
@@ -265,14 +273,6 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                                   child: (mealImageUrl != null)
                                       ? Image.network(mealImageUrl)
                                       : Image.network(widget.recipe.mealImage)),
-                              onTap: () => Navigator.of(context)
-                                  .pushNamed(ImageCaptureScreen.routeName)
-                                  .then((value) {
-                                setState(() {
-                                  mealImageUrl = value as String;
-                                  _editedRecipe.mealImage = mealImageUrl;
-                                });
-                              }),
                             ),
                             const SizedBox(height: 10),
                             Text(

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:blackbeans/models/recipe.dart';
 import 'package:blackbeans/screens/edit_recipe.dart';
+import 'package:blackbeans/widgets/beans_custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -17,30 +18,12 @@ class _RecipeDetailState extends State<RecipeDetail> {
   int recipeMaxLines = 4;
   double recipeBoxHeight = 60;
 
-  String curryRecipe =
-      'This has been the go-to dish I order at my local Indian restaurant so I finally just decided to recreate it at home and I couldnt be happier with the end result! I love that it has an abundance of spices leaving it with incredible flavor. I also love that little bit of cream thats added at the end, even though its not much it works wonders. And of course its got an abundance of sauce because thats what chicken curry is all about – that irresistible sauce for soaking up with naan bread or serving alongside rice.';
-
   @override
   Widget build(BuildContext context) {
     final Recipe recipe = ModalRoute.of(context).settings.arguments as Recipe;
-    final deviceWidth = MediaQuery.of(context).size.width;
     final halfDeviceHeight = MediaQuery.of(context).size.height / 2;
-    double containerHeight = halfDeviceHeight / 2;
 
     return Scaffold(
-        // extendBodyBehindAppBar: true,
-        // appBar: AppBar(
-        //   backgroundColor: Colors.transparent,
-        //   elevation: 0.0,
-        //   leading: IconButton(
-        //         icon: const Icon(
-        //           Ionicons.arrow_back_circle,
-        //           color: Colors.white70,
-        //           size: 32,
-        //         ),
-        //         onPressed: Navigator.of(context).pop,
-        //       ),
-        // ),
         body: Stack(
       children: [
         SizedBox(
@@ -48,7 +31,20 @@ class _RecipeDetailState extends State<RecipeDetail> {
           height: halfDeviceHeight,
           child: Image.network(recipe.mealImage, fit: BoxFit.cover),
         ),
-        StunningBraveBar(recipe: recipe),
+        if (recipe.creatorId != 'UJ8kdSL4DXdSdfLKMB9jXDADCAw1')
+          BeansCustomAppBar(
+            isBackButton: true,
+            trailingIcon: const Icon(Ionicons.pencil),
+            trailingIconColor: Theme.of(context).primaryColorDark,
+            trailingIconAction: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => EditRecipeScreen(recipe: recipe)));
+            },
+          )
+        else
+          const BeansCustomAppBar(
+            isBackButton: true,
+          ),
         DraggableScrollableSheet(
           initialChildSize: 0.6,
           minChildSize: 0.6,
@@ -56,24 +52,24 @@ class _RecipeDetailState extends State<RecipeDetail> {
           builder: (context, scrollcontroller) => Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).backgroundColor,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(20),
                   topLeft: Radius.circular(20),
                 ),
               ),
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: SingleChildScrollView(
                 controller: scrollcontroller,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.drag_handle),
-                      SizedBox(height: 6),
+                      const Icon(Icons.drag_handle),
+                      const SizedBox(height: 6),
                       Text(recipe.mealTitle,
                           style: Theme.of(context).textTheme.headline2),
                       Text(recipe.mealDescription,
                           style: Theme.of(context).textTheme.subtitle2),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       if (recipe.recipeTags != null)
                         Row(
                           children: recipe.recipeTags
@@ -96,9 +92,9 @@ class _RecipeDetailState extends State<RecipeDetail> {
                                   ))
                               .toList(),
                         ),
-                      SizedBox(height: 12),
-                      Divider(thickness: 1),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
+                      const Divider(thickness: 1),
+                      const SizedBox(height: 12),
                       Text(recipe.mealInstructions,
                           style: Theme.of(context).textTheme.subtitle1),
                     ]),
@@ -257,14 +253,14 @@ class _RecipeDetailState extends State<RecipeDetail> {
   }
 }
 
-class StunningBraveBar extends StatelessWidget {
+class StunningBar extends StatelessWidget {
   final Icon leadingIcon;
   final String centerTitle;
   final Icon trailingIcon;
   final Color backgroundColor;
   final Recipe recipe;
 
-  const StunningBraveBar({
+  const StunningBar({
     this.leadingIcon,
     this.centerTitle,
     this.trailingIcon,
