@@ -118,6 +118,7 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
                       return SingleChildScrollView(
                           padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                   snapshot.data.docs
@@ -125,11 +126,14 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
                                       .toString(),
                                   style: Theme.of(context).textTheme.bodyText2),
                               const SizedBox(width: 5),
-                              Text(
-                                  snapshot.data.docs
-                                      .elementAt(e)['comment']
-                                      .toString(),
-                                  style: Theme.of(context).textTheme.bodyText1),
+                              Flexible(
+                                                              child: Text(
+                                    snapshot.data.docs
+                                        .elementAt(e)['comment']
+                                        .toString(),
+                                    style: Theme.of(context).textTheme.bodyText1),
+                              ),
+                                  
                             ],
                           ));
                     });

@@ -253,66 +253,6 @@ class _RecipeDetailState extends State<RecipeDetail> {
   }
 }
 
-class StunningBar extends StatelessWidget {
-  final Icon leadingIcon;
-  final String centerTitle;
-  final Icon trailingIcon;
-  final Color backgroundColor;
-  final Recipe recipe;
-
-  const StunningBar({
-    this.leadingIcon,
-    this.centerTitle,
-    this.trailingIcon,
-    this.backgroundColor,
-    this.recipe,
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Material(
-              color: Colors.white60,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14)),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Colors.black,
-                  size: 22,
-                ),
-                onPressed: Navigator.of(context).pop,
-              ),
-            ),
-            Material(
-              color: Colors.white60,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              child: IconButton(
-                  icon: const Icon(
-                    Icons.edit,
-                    color: Colors.black,
-                    size: 24,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) =>
-                            EditRecipeScreen(recipe: recipe)));
-                  }),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class CustomAppBar extends PreferredSize {
   final Widget child;
   final double height;

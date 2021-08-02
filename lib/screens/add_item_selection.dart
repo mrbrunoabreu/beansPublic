@@ -33,7 +33,7 @@ class AddItemSelection extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             OutlineButton(
               onPressed: () => Navigator.of(context).pushNamed(
                           BeanstaAddPhotoScreen.routeName),
