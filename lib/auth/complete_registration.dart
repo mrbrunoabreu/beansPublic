@@ -1,5 +1,6 @@
 import 'package:blackbeans/bloc/user_repository.dart';
 import 'package:blackbeans/models/profile.dart';
+import 'package:blackbeans/screens/image_capture_screen.dart';
 import 'package:blackbeans/screens/recipes_home.dart';
 import 'package:blackbeans/screens/user_profile_screen.dart';
 import 'package:blackbeans/widgets/beans_custom_appbar.dart';
@@ -23,6 +24,7 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
   Profile editedProfile = Profile();
+  String newProfilePhotoUrl;
 
   Future<void> _saveForm(Profile editedProfile) async {
     final isValid = _formKey.currentState.validate();
@@ -149,6 +151,15 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
                             ),
                             const SizedBox(height: 15),
                             InkWell(
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed(ImageCaptureScreen.routeName)
+                                  .then((value) {
+                                setState(() {
+                                  newProfilePhotoUrl = value as String;
+                                  editedProfile.userPhotoUrl =
+                                      newProfilePhotoUrl;
+                                });
+                              }),
                               child: Container(
                                   height: 50,
                                   width: 50,
@@ -159,8 +170,7 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
                                   child: editedProfile.userPhotoUrl != null
                                       ? Image.network(
                                           editedProfile.userPhotoUrl)
-                                      : Icon(Ionicons.camera)),
-                              onTap: () {},
+                                      : const Icon(Ionicons.camera)),
                             ),
                             const SizedBox(height: 10),
                             Text(

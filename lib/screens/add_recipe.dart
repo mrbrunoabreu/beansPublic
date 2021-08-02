@@ -5,6 +5,7 @@ import 'package:blackbeans/models/profile.dart';
 import 'package:blackbeans/models/recipe.dart';
 import 'package:blackbeans/screens/image_capture_screen.dart';
 import 'package:blackbeans/screens/recipes_home.dart';
+import 'package:blackbeans/widgets/beans_custom_appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -106,41 +107,15 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Material(
-                            color: Colors.white60,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            child: IconButton(
-                              icon: const Icon(
-                                Ionicons.chevron_back,
-                                color: Colors.black,
-                                size: 22,
-                              ),
-                              onPressed: Navigator.of(context).pop,
-                            ),
-                          ),
-                          Material(
-                            color: Colors.lightBlueAccent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            child: IconButton(
-                              icon: const Icon(
-                                Ionicons.checkmark,
-                                color: Colors.white,
-                                size: 22,
-                              ),
-                              onPressed: () => _saveForm(_newRecipe),
-                            ),
-                          )
-                        ],
-                      ),
+                      child: BeansCustomAppBar(
+                    isBackButton: true,
+                    trailingIcon: const Icon(
+                      Ionicons.checkmark,
+                      color: Colors.white,
+                      size: 22,
                     ),
-                  ),
+                    trailingIconAction: () => _saveForm(_newRecipe),
+                  )),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 16, horizontal: 24),
@@ -304,63 +279,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         ),
       );
     }
-  }
-}
-
-class StunningBar extends StatelessWidget {
-  final Icon leadingIcon;
-  final String centerTitle;
-  final Icon trailingIcon;
-  final Color backgroundColor;
-  final Future save;
-
-  const StunningBar({
-    this.leadingIcon,
-    this.centerTitle,
-    this.trailingIcon,
-    this.backgroundColor,
-    this.save,
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Material(
-              color: Colors.white60,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: IconButton(
-                icon: const Icon(
-                  Ionicons.chevron_back,
-                  color: Colors.black,
-                  size: 22,
-                ),
-                onPressed: Navigator.of(context).pop,
-              ),
-            ),
-            Material(
-              color: Colors.lightBlueAccent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: IconButton(
-                icon: const Icon(
-                  Ionicons.checkmark,
-                  color: Colors.white,
-                  size: 22,
-                ),
-                onPressed: () {},
-              ),
-            )
-          ],
-        ),
-      ),
-    );
   }
 }
 
