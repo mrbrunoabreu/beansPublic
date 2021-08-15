@@ -258,6 +258,11 @@ class RecipesProvider with ChangeNotifier {
   }
 
   Future<void> toggleFave({String id}) async {
+    
+    _recipeItems.forEach((element) =>
+        {if (element.recipeId == id) element.isFave = !element.isFave});
+    notifyListeners();
+    
     final Dio dio = Dio();
     final url = '$baseUrl/$uid/recipes/$id.json';
 
@@ -268,13 +273,13 @@ class RecipesProvider with ChangeNotifier {
     } catch (error) {
       print(error);
     }
-
-    _recipeItems.forEach((element) =>
-        {if (element.recipeId == id) element.isFave = !element.isFave});
-    notifyListeners();
   }
 
   Future<void> togglePlan({String id}) async {
+    _recipeItems.forEach((element) =>
+        {if (element.recipeId == id) element.isPlan = !element.isPlan});
+    notifyListeners();
+    
     final Dio dio = Dio();
     final url = '$baseUrl/$uid/recipes/$id.json';
 
@@ -285,9 +290,5 @@ class RecipesProvider with ChangeNotifier {
     } catch (error) {
       print(error);
     }
-
-    _recipeItems.forEach((element) =>
-        {if (element.recipeId == id) element.isPlan = !element.isPlan});
-    notifyListeners();
   }
 }

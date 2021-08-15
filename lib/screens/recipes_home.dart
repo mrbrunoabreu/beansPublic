@@ -132,7 +132,7 @@ class RecipesMain extends StatelessWidget {
                   const SizedBox(width: 10),
                   FlatButton(
                     color: recipesProvider.showDinner
-                        ? Theme.of(context).cardColor
+                        ? Colors.blue[700]
                         : Theme.of(context).buttonColor,
                     disabledColor: Colors.red,
                     onPressed: () => recipesProvider.toggleShowDinner(),
@@ -144,7 +144,7 @@ class RecipesMain extends StatelessWidget {
                   const SizedBox(width: 10),
                   FlatButton(
                     color: recipesProvider.showPlan
-                        ? Theme.of(context).cardColor
+                        ? Colors.blue[700]
                         : Theme.of(context).buttonColor,
                     disabledColor: Colors.red,
                     onPressed: () => recipesProvider.toggleShowPlan(),
@@ -156,7 +156,7 @@ class RecipesMain extends StatelessWidget {
                   const SizedBox(width: 10),
                   FlatButton(
                     color: recipesProvider.showFave
-                        ? Theme.of(context).cardColor
+                        ? Colors.blue[700]
                         : Theme.of(context).buttonColor,
                     disabledColor: Colors.red,
                     onPressed: () => recipesProvider.toggleShowFave(),
