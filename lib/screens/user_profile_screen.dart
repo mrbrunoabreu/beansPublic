@@ -1,14 +1,14 @@
 import 'package:blackbeans/bloc/user_repository.dart';
 import 'package:blackbeans/screens/edit_profile.dart';
 import 'package:blackbeans/screens/recipes_home.dart';
-import 'package:blackbeans/widgets/switch_theme.dart';
+import '../widgets/switch_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({Key key}) : super(key: key);
+  const UserProfileScreen({Key? key}) : super(key: key);
 
   static const routeName = 'profile-screen';
 
@@ -17,7 +17,7 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  Future _userProfile;
+  Future? _userProfile;
 
   bool profileCheck = true;
 
@@ -71,7 +71,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                   CircleAvatar(
                                     radius: 40,
                                     backgroundImage: NetworkImage(repositoryData
-                                        .userProfile.userPhotoUrl),
+                                        .userProfile.userPhotoUrl!),
                                   ),
                                   const SizedBox(width: 14),
                                   Column(
@@ -111,7 +111,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                             ))),
                               ),
                               const SizedBox(height: 20),
-                              Consumer<SwitchTheme>(
+                              Consumer<SwitchBeansTheme>(
                                 builder: (context, switchTheme, child) =>
                                     SettingsItem(
                                         iconShapeColor: Colors.lightBlue[50],
@@ -155,7 +155,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future buildShowDialog(
-      {BuildContext context, String alertMessage, VoidCallback onConfirm}) {
+      {required BuildContext context, String? alertMessage, VoidCallback? onConfirm}) {
     return showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -163,7 +163,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(15))),
               titleTextStyle: Theme.of(context).textTheme.bodyText1,
               title: Text(
-                alertMessage,
+                alertMessage!,
               ),
               actions: [
                 FlatButton(
@@ -183,11 +183,11 @@ class SettingsItem extends StatelessWidget {
       this.settingsTitle,
       this.onPressedAction});
 
-  final Color iconShapeColor;
-  final Color iconColor;
-  final IconData icon;
-  final String settingsTitle;
-  final VoidCallback onPressedAction;
+  final Color? iconShapeColor;
+  final Color? iconColor;
+  final IconData? icon;
+  final String? settingsTitle;
+  final VoidCallback? onPressedAction;
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +209,7 @@ class SettingsItem extends StatelessWidget {
             ),
             const SizedBox(width: 14),
             Text(
-              settingsTitle,
+              settingsTitle!,
               style: Theme.of(context).textTheme.headline5,
             ),
           ],

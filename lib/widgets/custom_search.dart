@@ -51,7 +51,7 @@ class CustomSearchDelegate extends SearchDelegate {
     searchResult.clear();
     searchResult = recipeData
         .where((element) =>
-            element.mealTitle.toLowerCase().contains(query.toLowerCase()))
+            element.mealTitle!.toLowerCase().contains(query.toLowerCase()))
         .toList();
     return Container(
       margin: const EdgeInsets.all(20),
@@ -65,11 +65,11 @@ class CustomSearchDelegate extends SearchDelegate {
                 width: 80,
                 height: 60,
                 child: item.mealImage != null
-                    ? Image.network(item.mealImage, fit: BoxFit.cover)
+                    ? Image.network(item.mealImage!, fit: BoxFit.cover)
                     : Image.asset('assets/kiyama.jpg'),
               ),
               title: Text(
-                item.mealTitle,
+                item.mealTitle!,
                 style: const TextStyle(fontSize: 14),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
@@ -83,7 +83,7 @@ class CustomSearchDelegate extends SearchDelegate {
                       icon: Icon(
                         Icons.favorite,
                         size: 16,
-                        color: item.isFave ? Colors.red : Colors.grey,
+                        color: item.isFave! ? Colors.red : Colors.grey,
                       ),
                       onPressed: () {
                         recipeProvider.toggleFave(id: item.recipeId);
@@ -91,7 +91,7 @@ class CustomSearchDelegate extends SearchDelegate {
                   IconButton(
                       icon: Icon(Icons.restaurant,
                           size: 16,
-                          color: item.isPlan ? Colors.red : Colors.grey),
+                          color: item.isPlan! ? Colors.red : Colors.grey),
                       onPressed: () {
                         recipeProvider.togglePlan(id: item.recipeId);
                       }), // icon-2
@@ -111,7 +111,7 @@ class CustomSearchDelegate extends SearchDelegate {
         ? suggestion
         : recipeData
             .where((element) =>
-                element.mealTitle.toLowerCase().contains(query.toLowerCase()))
+                element.mealTitle!.toLowerCase().contains(query.toLowerCase()))
             .toList();
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
@@ -126,12 +126,12 @@ class CustomSearchDelegate extends SearchDelegate {
         title: RichText(
             text: TextSpan(
                 text: suggestionList[index].mealTitle.substring(0, query.length)
-                    as String,
+                    as String?,
                 style: Theme.of(context).textTheme.bodyText1,
                 children: [
               TextSpan(
                 text: suggestionList[index].mealTitle.substring(query.length)
-                    as String,
+                    as String?,
               )
             ])),
       ),

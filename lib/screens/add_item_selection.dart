@@ -3,7 +3,7 @@ import 'package:blackbeans/screens/beansta_add_photo.dart';
 import 'package:flutter/material.dart';
 
 class AddItemSelection extends StatelessWidget {
-  const AddItemSelection({Key key}) : super(key: key);
+  const AddItemSelection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

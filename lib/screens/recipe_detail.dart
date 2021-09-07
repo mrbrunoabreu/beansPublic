@@ -20,7 +20,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final Recipe recipe = ModalRoute.of(context).settings.arguments as Recipe;
+    final Recipe recipe = ModalRoute.of(context)!.settings.arguments as Recipe;
     final halfDeviceHeight = MediaQuery.of(context).size.height / 2;
 
     return Scaffold(
@@ -29,7 +29,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
         SizedBox(
           width: double.infinity,
           height: halfDeviceHeight,
-          child: Image.network(recipe.mealImage, fit: BoxFit.cover),
+          child: Image.network(recipe.mealImage!, fit: BoxFit.cover),
         ),
         if (recipe.creatorId != 'UJ8kdSL4DXdSdfLKMB9jXDADCAw1')
           BeansCustomAppBar(
@@ -65,14 +65,14 @@ class _RecipeDetailState extends State<RecipeDetail> {
                     children: [
                       const Icon(Icons.drag_handle),
                       const SizedBox(height: 6),
-                      Text(recipe.mealTitle,
+                      Text(recipe.mealTitle!,
                           style: Theme.of(context).textTheme.headline2),
-                      Text(recipe.mealDescription,
+                      Text(recipe.mealDescription!,
                           style: Theme.of(context).textTheme.subtitle2),
                       const SizedBox(height: 12),
                       if (recipe.recipeTags != null)
                         Row(
-                          children: recipe.recipeTags
+                          children: recipe.recipeTags!
                               .map((e) => Padding(
                                     padding: const EdgeInsets.only(right: 4),
                                     child: Material(
@@ -85,7 +85,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
                                           child: Text('$e',
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .button
+                                                  .button!
                                                   .copyWith(
                                                       color: Colors.black))),
                                     ),
@@ -95,7 +95,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
                       const SizedBox(height: 12),
                       const Divider(thickness: 1),
                       const SizedBox(height: 12),
-                      Text(recipe.mealInstructions,
+                      Text(recipe.mealInstructions!,
                           style: Theme.of(context).textTheme.subtitle1),
                     ]),
               )),
@@ -253,22 +253,22 @@ class _RecipeDetailState extends State<RecipeDetail> {
   }
 }
 
-class CustomAppBar extends PreferredSize {
-  final Widget child;
-  final double height;
+// class CustomAppBar extends PreferredSize {
+//   final Widget child;
+//   final double height;
 
-  CustomAppBar({@required this.child, this.height = kToolbarHeight});
+//   const CustomAppBar({required this.child, this.height = kToolbarHeight});
 
-  @override
-  Size get preferredSize => Size.fromHeight(height);
+//   @override
+//   Size get preferredSize => Size.fromHeight(height);
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: SizedBox(
-        height: preferredSize.height,
-        child: child,
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return SafeArea(
+//       child: SizedBox(
+//         height: preferredSize.height,
+//         child: child,
+//       ),
+//     );
+//   }
+// }

@@ -199,7 +199,7 @@ class HomeScreen extends StatelessWidget {
                                 begin: FractionalOffset.center,
                                 end: FractionalOffset.bottomCenter,
                                 colors: [
-                                  Colors.grey[700].withOpacity(0.0),
+                                  Colors.grey[700]!.withOpacity(0.0),
                                   Colors.black87,
                                 ],
                                 stops: [

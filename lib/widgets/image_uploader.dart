@@ -6,10 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ionicons/ionicons.dart';
 
 class ImageUploader extends StatefulWidget {
-  final File file;
-  final String fileName;
+  final File? file;
+  final String? fileName;
 
-  ImageUploader({Key key, this.file, this.fileName}) : super(key: key);
+  ImageUploader({Key? key, this.file, this.fileName}) : super(key: key);
 
   @override
   _ImageUploaderState createState() => _ImageUploaderState();
@@ -19,7 +19,7 @@ class _ImageUploaderState extends State<ImageUploader> {
   final FirebaseStorage _storage =
       FirebaseStorage.instanceFor(bucket: 'gs://beans-aa4aa.appspot.com');
 
-  UploadTask _uploadTask;
+  UploadTask? _uploadTask;
   String uid = '';
 
   Future<void> _startUpload() async {
@@ -34,7 +34,7 @@ class _ImageUploaderState extends State<ImageUploader> {
     try {
       await FirebaseStorage.instance
           .ref('uploads/file-to-upload.png')
-          .putFile(widget.file);
+          .putFile(widget.file!);
     } on FirebaseException catch (e) {
       // e.g, e.code == 'canceled'
     }
@@ -42,9 +42,9 @@ class _ImageUploaderState extends State<ImageUploader> {
     final String filePath = 'images/$uid/${widget.fileName}';
 
     setState(() {
-      _uploadTask = _storage.ref().child(filePath).putFile(widget.file);
+      _uploadTask = _storage.ref().child(filePath).putFile(widget.file!);
     });
-    final TaskSnapshot taskSnapshot = await _uploadTask.whenComplete(() {});
+    final TaskSnapshot taskSnapshot = await _uploadTask!.whenComplete(() {});
     final String imageUrl = await taskSnapshot.ref.getDownloadURL();
     Navigator.of(context).pop(imageUrl);
   }
@@ -53,22 +53,22 @@ class _ImageUploaderState extends State<ImageUploader> {
   Widget build(BuildContext context) {
     if (_uploadTask != null) {
       return StreamBuilder<TaskSnapshot>(
-          stream: _uploadTask.asStream(),
+          stream: _uploadTask!.asStream(),
           builder: (context, snapshot) {
-            var event = snapshot?.data;
+            var event = snapshot.data;
             double progressPercent =
                 event != null ? event.bytesTransferred / event.totalBytes : 0;
             return Column(
               children: [
-                if (_uploadTask.snapshot.state == TaskState.success)
+                if (_uploadTask!.snapshot.state == TaskState.success)
                   const Text('Finished'),
-                if (_uploadTask.snapshot.state == TaskState.paused)
-                  FlatButton(
-                      onPressed: () => _uploadTask.resume(),
+                if (_uploadTask!.snapshot.state == TaskState.paused)
+                  TextButton(
+                      onPressed: () => _uploadTask!.resume(),
                       child: const Icon(Ionicons.play)),
-                if (_uploadTask.snapshot.state == TaskState.running)
-                  FlatButton(
-                      onPressed: () => _uploadTask.pause(),
+                if (_uploadTask!.snapshot.state == TaskState.running)
+                  TextButton(
+                      onPressed: () => _uploadTask!.pause(),
                       child: const Icon(Ionicons.pause)),
                 LinearProgressIndicator(value: progressPercent),
                 Text('${(progressPercent * 100).toStringAsFixed(2)} %',
@@ -77,7 +77,7 @@ class _ImageUploaderState extends State<ImageUploader> {
             );
           });
     } else {
-      return FlatButton.icon(
+      return TextButton.icon(
           onPressed: _startUpload,
           icon: const Icon(Ionicons.cloud_upload),
           label: const Text('Upload image'));

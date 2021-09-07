@@ -1,5 +1,5 @@
 import 'package:blackbeans/auth/complete_registration.dart';
-import 'package:blackbeans/bloc/beansta_provider.dart';
+import '../bloc/beansta_provider.dart';
 import 'package:blackbeans/bloc/user_repository.dart';
 import 'package:blackbeans/models/beansta_comment.dart';
 import 'package:blackbeans/models/profile.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
 class BeanstaHome extends StatefulWidget {
-  const BeanstaHome({Key key}) : super(key: key);
+  const BeanstaHome({Key? key}) : super(key: key);
 
   static const routeName = 'beansta-home';
 
@@ -22,8 +22,8 @@ class BeanstaHome extends StatefulWidget {
 class _BeanstaHomeState extends State<BeanstaHome> {
   final ScrollController _scrollController = ScrollController();
   bool profileCheck = true;
-  Profile user;
-  BeanstaProvider beanstaData;
+  Profile? user;
+  late BeanstaProvider beanstaData;
 
   final Stream<QuerySnapshot> _beanstaStream = FirebaseFirestore.instance
       .collection('beansTimeLine')
@@ -47,7 +47,7 @@ class _BeanstaHomeState extends State<BeanstaHome> {
 
   @override
   Widget build(BuildContext context) {
-    if (user.name == null || user.name == 'User') {
+    if (user!.name == null || user!.name == 'User') {
       return const CompleteRegistration();
     } else {
       return SafeArea(
@@ -61,41 +61,41 @@ class _BeanstaHomeState extends State<BeanstaHome> {
                   : ListView.builder(
                       controller: _scrollController,
                       shrinkWrap: true,
-                      itemCount: snapshot.data.docs.length,
+                      itemCount: snapshot.data!.docs.length,
                       itemBuilder: (ctx, i) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ItemHeader(
                               user: user,
-                              authorName: snapshot.data.docs
+                              authorName: snapshot.data!.docs
                                   .elementAt(i)['creatorName']
                                   .toString(),
-                              authorAvatar: snapshot.data.docs
+                              authorAvatar: snapshot.data!.docs
                                   .elementAt(i)['creatorPhoto']
                                   .toString(),
-                              photoLocation: snapshot.data.docs
+                              photoLocation: snapshot.data!.docs
                                   .elementAt(i)['itemLocation']
                                   .toString(),
-                              itemImageUrl: snapshot.data.docs
+                              itemImageUrl: snapshot.data!.docs
                                   .elementAt(i)['itemPhoto']
                                   .toString(),
-                              itemId: snapshot.data.docs.elementAt(i).id,
-                              isOwner: snapshot.data.docs
+                              itemId: snapshot.data!.docs.elementAt(i).id,
+                              isOwner: snapshot.data!.docs
                                       .elementAt(i)['creatorId'] ==
-                                  user.profileId,
+                                  user!.profileId,
                             ),
                             const SizedBox(height: 7),
                             Image.network(
-                                snapshot.data.docs
+                                snapshot.data!.docs
                                     .elementAt(i)['itemPhoto']
                                     .toString(),
                                 fit: BoxFit.fitWidth),
                             const SizedBox(height: 7),
                             Row(
                               children: [
-                                snapshot.data.docs
-                                      .elementAt(i)['likes'].toString().contains(user.profileId) ?
+                                snapshot.data!.docs
+                                      .elementAt(i)['likes'].toString().contains(user!.profileId!) ?
                                 IconButton(
                                     icon: const Icon(
                                       Ionicons.heart,
@@ -104,26 +104,26 @@ class _BeanstaHomeState extends State<BeanstaHome> {
                                     ),
                                     onPressed: () => beanstaData.addFavorite(
                                         item:
-                                            snapshot.data.docs.elementAt(i).id,
-                                        user: user)) : IconButton(
+                                            snapshot.data!.docs.elementAt(i).id,
+                                        user: user!)) : IconButton(
                                     icon: const Icon(
                                       Ionicons.heart_outline,
                                       size: 27,
                                     ),
                                     onPressed: () => beanstaData.addFavorite(
                                         item:
-                                            snapshot.data.docs.elementAt(i).id,
-                                        user: user)),
+                                            snapshot.data!.docs.elementAt(i).id,
+                                        user: user!)),
                                 const SizedBox(width: 7),
                                 IconButton(
                                   icon: const Icon(Ionicons.chatbubble_outline),
                                   onPressed: () => Navigator.of(context)
                                       .pushNamed(BeanstaComments.routeName,
                                           arguments: BeanstaComment(
-                                              itemId: snapshot.data.docs
+                                              itemId: snapshot.data!.docs
                                                   .elementAt(i)
                                                   .id,
-                                              commentAuthor: user.name)),
+                                              commentAuthor: user!.name)),
                                 ),
                               ],
                             ),
@@ -134,12 +134,12 @@ class _BeanstaHomeState extends State<BeanstaHome> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if (snapshot.data.docs
+                                  if (snapshot.data!.docs
                                       .elementAt(i)['itemDescription']
                                       .toString()
                                       .isNotEmpty)
                                     ReadMoreText(
-                                      snapshot.data.docs
+                                      snapshot.data!.docs
                                           .elementAt(i)['itemDescription']
                                           .toString(),
                                       trimLines: 3,
@@ -157,8 +157,8 @@ class _BeanstaHomeState extends State<BeanstaHome> {
                                   const SizedBox(height: 2),
                                   CommentsArea(
                                       itemId:
-                                          snapshot.data.docs.elementAt(i).id,
-                                      author: user.name),
+                                          snapshot.data!.docs.elementAt(i).id,
+                                      author: user!.name),
 
                                   // Text('View all 10 comments',
                                   //     style:
@@ -178,19 +178,19 @@ class _BeanstaHomeState extends State<BeanstaHome> {
 
 class ItemHeader extends StatelessWidget {
   @required
-  final Profile user;
+  final Profile? user;
   @required
-  final String authorName;
+  final String? authorName;
   @required
-  final String authorAvatar;
+  final String? authorAvatar;
   @required
-  final String photoLocation;
+  final String? photoLocation;
   @required
-  final String itemImageUrl;
+  final String? itemImageUrl;
   @required
-  final String itemId;
+  final String? itemId;
   @required
-  final bool isOwner;
+  final bool? isOwner;
 
   const ItemHeader({
     this.user,
@@ -200,7 +200,7 @@ class ItemHeader extends StatelessWidget {
     this.itemImageUrl,
     this.itemId,
     this.isOwner,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -211,12 +211,12 @@ class ItemHeader extends StatelessWidget {
       dense: true,
       leading: CircleAvatar(
         radius: 20,
-        backgroundImage: NetworkImage(authorAvatar),
+        backgroundImage: NetworkImage(authorAvatar!),
       ),
-      title: Text(authorName, style: Theme.of(context).textTheme.bodyText2),
+      title: Text(authorName!, style: Theme.of(context).textTheme.bodyText2),
       subtitle:
-          Text(photoLocation, style: Theme.of(context).textTheme.bodyText1),
-      trailing: isOwner
+          Text(photoLocation!, style: Theme.of(context).textTheme.bodyText1),
+      trailing: isOwner!
           ? IconButton(
               onPressed: () => showDialog(
                   context: context,
@@ -234,9 +234,9 @@ class ItemHeader extends StatelessWidget {
                                       context,
                                       listen: false)
                                   .deletePhotoItem(
-                                      mealImageUrl: itemImageUrl,
+                                      mealImageUrl: itemImageUrl!,
                                       itemId: itemId,
-                                      user: user),
+                                      user: user!),
                               child: const Text('OK'))
                         ],
                       )),
@@ -250,10 +250,10 @@ class ItemHeader extends StatelessWidget {
 
 class CommentsArea extends StatelessWidget {
   @required
-  final String itemId;
-  final String author;
+  final String? itemId;
+  final String? author;
 
-  const CommentsArea({this.itemId, this.author, Key key}) : super(key: key);
+  const CommentsArea({this.itemId, this.author, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -267,7 +267,7 @@ class CommentsArea extends StatelessWidget {
         builder: (context, snapshot) {
           return snapshot.connectionState == ConnectionState.waiting
               ? const Center(child: CircularProgressIndicator())
-              : snapshot.data.docs.length > 2
+              : snapshot.data!.docs.length > 2
                   ? FlatButton(
                       padding: const EdgeInsets.only(left: 0),
                       onPressed: () {
@@ -277,12 +277,12 @@ class CommentsArea extends StatelessWidget {
                                 itemId: itemId, commentAuthor: author));
                       },
                       child: Text(
-                          'View all ${snapshot.data.docs.length} comments',
+                          'View all ${snapshot.data!.docs.length} comments',
                           style: Theme.of(context).textTheme.headline6))
                   : ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: snapshot.data.docs.length,
+                      itemCount: snapshot.data!.docs.length,
                       itemBuilder: (ctx, e) {
                         return Container(
                             padding: const EdgeInsets.only(
@@ -291,7 +291,7 @@ class CommentsArea extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                    snapshot.data.docs
+                                    snapshot.data!.docs
                                         .elementAt(e)['commentAuthor']
                                         .toString(),
                                     style:
@@ -299,7 +299,7 @@ class CommentsArea extends StatelessWidget {
                                 const SizedBox(width: 5),
                                 Flexible(
                                   child: Text(
-                                    snapshot.data.docs
+                                    snapshot.data!.docs
                                         .elementAt(e)['comment']
                                         .toString(),
                                     style:

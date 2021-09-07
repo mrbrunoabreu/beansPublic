@@ -9,9 +9,9 @@ import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({this.currentProfile, Key key}) : super(key: key);
+  const EditProfileScreen({this.currentProfile, Key? key}) : super(key: key);
 
-  final Profile currentProfile;
+  final Profile? currentProfile;
   static const routeName = 'editprofile-screen';
 
   @override
@@ -19,7 +19,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  String newProfilePhotoUrl;
+  String? newProfilePhotoUrl;
 
   final _formKey = GlobalKey<FormState>();
   final _firstNameFocus = FocusNode();
@@ -29,12 +29,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Profile editedProfile = Profile();
 
   Future<void> _saveForm(Profile editedProfile) async {
-    final isValid = _formKey.currentState.validate();
+    final isValid = _formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
 
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
 
     try {
       Provider.of<UserRepository>(context, listen: false).editProfile(
@@ -144,7 +144,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               style: Theme.of(context).textTheme.bodyText1,
                               textInputAction: TextInputAction.next,
                               autofocus: true,
-                              initialValue: widget.currentProfile.name,
+                              initialValue: widget.currentProfile!.name,
                               onFieldSubmitted: (_) {
                                 FocusScope.of(context)
                                     .requestFocus(_lastNameFocus);
@@ -156,7 +156,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 editedProfile.name = value;
                               },
                               validator: (value) {
-                                if (value.isEmpty || value.length < 3) {
+                                if (value!.isEmpty || value.length < 3) {
                                   return 'Please enter at least 3 characters';
                                 }
                                 return null;
@@ -167,7 +167,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               style: Theme.of(context).textTheme.bodyText1,
                               focusNode: _lastNameFocus,
                               textInputAction: TextInputAction.next,
-                              initialValue: widget.currentProfile.lastName,
+                              initialValue: widget.currentProfile!.lastName,
                               onFieldSubmitted: (_) {
                                 FocusScope.of(context)
                                     .requestFocus(_emailFocus);
@@ -179,7 +179,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 editedProfile.lastName = value;
                               },
                               validator: (value) {
-                                if (value.isEmpty || value.length < 3) {
+                                if (value!.isEmpty || value.length < 3) {
                                   return 'Please enter at least 3 characters';
                                 }
                                 return null;
@@ -189,7 +189,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             TextFormField(
                               style: Theme.of(context).textTheme.bodyText1,
                               focusNode: _emailFocus,
-                              initialValue: widget.currentProfile.email,
+                              initialValue: widget.currentProfile!.email,
                               onFieldSubmitted: (_) {
                                 FocusScope.of(context)
                                     .requestFocus(_passwordFocus);
@@ -201,7 +201,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 editedProfile.email = value;
                               },
                               validator: (value) {
-                                if (value.isEmpty || value.length < 3) {
+                                if (value!.isEmpty || value.length < 3) {
                                   return 'Please enter at least 3 characters';
                                 }
                                 return null;
@@ -218,7 +218,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   .pushNamed(ImageCaptureScreen.routeName)
                                   .then((value) {
                                 setState(() {
-                                  newProfilePhotoUrl = value as String;
+                                  newProfilePhotoUrl = value as String?;
                                   editedProfile.userPhotoUrl =
                                       newProfilePhotoUrl;
                                 });
@@ -231,7 +231,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(14))),
                                   child: Image.network(
-                                      widget.currentProfile.userPhotoUrl)),
+                                      widget.currentProfile!.userPhotoUrl!)),
                             ),
                             const SizedBox(height: 10),
                             Text(

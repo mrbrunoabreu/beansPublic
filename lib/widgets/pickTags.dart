@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class PickTags extends StatefulWidget {
 
-  final void Function(String tag) onTag;
-  final void Function(String tag) onDelete;
-  final List<String> initialTags;
+  final void Function(String tag)? onTag;
+  final void Function(String tag)? onDelete;
+  final List<String>? initialTags;
 
   const PickTags({
-    Key key,
+    Key? key,
     this.onTag,
     this.onDelete,
     this.initialTags
@@ -18,16 +18,16 @@ class PickTags extends StatefulWidget {
 }
 
 class _TextFieldTagsState extends State<PickTags> {
-  List<String> _tagsStringContent = [];
+  List<String>? _tagsStringContent = [];
   final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _showPrefixIcon = false;
-  double _deviceWidth;
+  late double _deviceWidth;
 
   @override
   void initState() {
     super.initState();
-    if (widget.initialTags != null && widget.initialTags.isNotEmpty) {
+    if (widget.initialTags != null && widget.initialTags!.isNotEmpty) {
       _showPrefixIcon = true;
       _tagsStringContent = widget.initialTags;
     }
@@ -48,8 +48,8 @@ class _TextFieldTagsState extends State<PickTags> {
 
   List<Widget> get _getTags {
     List<Widget> _tags = [];
-    for (var i = 0; i < _tagsStringContent.length; i++) {
-      final String tagText = _tagsStringContent[i];
+    for (var i = 0; i < _tagsStringContent!.length; i++) {
+      final String tagText = _tagsStringContent![i];
       var tag = Container(
         padding: const EdgeInsets.all(8),
         child: Row(
@@ -62,16 +62,16 @@ class _TextFieldTagsState extends State<PickTags> {
             GestureDetector(
                 onTap: () {
                   if (widget.onDelete != null) {
-                    widget.onDelete(_tagsStringContent[i]);
+                    widget.onDelete!(_tagsStringContent![i]);
                   }
-                  if (_tagsStringContent.length == 1 && _showPrefixIcon) {
+                  if (_tagsStringContent!.length == 1 && _showPrefixIcon) {
                     setState(() {
-                      _tagsStringContent.remove(_tagsStringContent[i]);
+                      _tagsStringContent!.remove(_tagsStringContent![i]);
                       _showPrefixIcon = false;
                     });
                   } else {
                     setState(() {
-                      _tagsStringContent.remove(_tagsStringContent[i]);
+                      _tagsStringContent!.remove(_tagsStringContent![i]);
                     });
                   }
                 },
@@ -86,7 +86,7 @@ class _TextFieldTagsState extends State<PickTags> {
   }
 
   void _animateTransition() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
@@ -127,16 +127,16 @@ class _TextFieldTagsState extends State<PickTags> {
         var val = value.trim().toLowerCase();
         if (value.isEmpty) {
           _textEditingController.clear();
-          if (!_tagsStringContent.contains(val)) {
-            widget.onTag(val);
+          if (!_tagsStringContent!.contains(val)) {
+            widget.onTag!(val);
             if (!_showPrefixIcon) {
               setState(() {
-                _tagsStringContent.add(val);
+                _tagsStringContent!.add(val);
                 _showPrefixIcon = true;
               });
             } else {
               setState(() {
-                _tagsStringContent.add(val);
+                _tagsStringContent!.add(val);
               });
             }
             this._animateTransition();
@@ -154,17 +154,17 @@ class _TextFieldTagsState extends State<PickTags> {
           if (lastLastTag.length > 0) {
             _textEditingController.clear();
 
-            if (!_tagsStringContent.contains(lastLastTag)) {
-              widget.onTag(lastLastTag);
+            if (!_tagsStringContent!.contains(lastLastTag)) {
+              widget.onTag!(lastLastTag);
 
               if (!_showPrefixIcon) {
                 setState(() {
-                  _tagsStringContent.add(lastLastTag);
+                  _tagsStringContent!.add(lastLastTag);
                   _showPrefixIcon = true;
                 });
               } else {
                 setState(() {
-                  _tagsStringContent.add(lastLastTag);
+                  _tagsStringContent!.add(lastLastTag);
                 });
               }
               this._animateTransition();

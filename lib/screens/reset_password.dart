@@ -5,7 +5,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({Key key}) : super(key: key);
+  const ResetPasswordScreen({Key? key}) : super(key: key);
 
   static const routeName = 'resetpassword-screen';
 
@@ -19,11 +19,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _confirmPasswordFocus = FocusNode();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
-  String _newPassword = '';
+  String? _newPassword = '';
 
   _saveForm() {
-    if (_formKey.currentState.validate()) {
-      Provider.of<UserRepository>(context).changePassword(_newPassword);
+    if (_formKey.currentState!.validate()) {
+      Provider.of<UserRepository>(context).changePassword(_newPassword!);
     } else {
       return showDialog(
           context: context,
@@ -143,7 +143,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                   hintText: 'Enter a new password'),
                               validator: (value) {
                                 _newPassword = value;
-                                if (value.isEmpty || value.length < 3) {
+                                if (value!.isEmpty || value.length < 3) {
                                   return 'Please enter at least 3 characters';
                                 }
                                 return null;

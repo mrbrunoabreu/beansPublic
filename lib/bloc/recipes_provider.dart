@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class RecipesProvider with ChangeNotifier {
   String baseUrl = 'https://beans-aa4aa.firebaseio.com/';
 
-  String uid;
+  String? uid;
 
   List<Recipe> _recipeItems = [
     Recipe(
@@ -25,13 +25,13 @@ class RecipesProvider with ChangeNotifier {
 
   List<Recipe> get recipeItems => [..._recipeItems];
   List<Recipe> get lunchItems =>
-      recipeItems.where((element) => element.isLunch).toList();
+      recipeItems.where((element) => element.isLunch!).toList();
   List<Recipe> get dinnerItems =>
-      recipeItems.where((element) => element.isDinner).toList();
+      recipeItems.where((element) => element.isDinner!).toList();
   List<Recipe> get planItems =>
-      recipeItems.where((element) => element.isPlan).toList();
+      recipeItems.where((element) => element.isPlan!).toList();
   List<Recipe> get faveItems =>
-      recipeItems.where((element) => element.isFave).toList();
+      recipeItems.where((element) => element.isFave!).toList();
 
   List<Recipe> get suggestions {
     final List<Recipe> randomList = recipeItems;
@@ -40,7 +40,7 @@ class RecipesProvider with ChangeNotifier {
     return trimmedRandom.toList();
   }
 
-  List<Recipe> todaysSuggestions;
+  late List<Recipe> todaysSuggestions;
 
   Future<void> staffSuggestions() async {
 
@@ -57,17 +57,17 @@ class RecipesProvider with ChangeNotifier {
       extractedData.forEach((recipeId, recipeData) {
         _newData.add(Recipe(
             recipeId: recipeId,
-            creatorId: recipeData['creatorId'] as String,
-            creationDate: recipeData['creationDate'] as String,
-            mealTitle: recipeData['mealTitle'] as String,
-            mealDescription: recipeData['mealDescription'] as String,
-            mealInstructions: recipeData['mealInstructions'] as String,
-            mealImage: recipeData['mealImage'] as String,
-            isLunch: recipeData['isLunch'] as bool,
-            isDinner: recipeData['isDinner'] as bool,
-            isPlan: recipeData['isPlan'] as bool,
-            isFave: recipeData['isFave'] as bool,
-            recipeTags: recipeData['recipeTags'] as List<dynamic>));
+            creatorId: recipeData['creatorId'] as String?,
+            creationDate: recipeData['creationDate'] as String?,
+            mealTitle: recipeData['mealTitle'] as String?,
+            mealDescription: recipeData['mealDescription'] as String?,
+            mealInstructions: recipeData['mealInstructions'] as String?,
+            mealImage: recipeData['mealImage'] as String?,
+            isLunch: recipeData['isLunch'] as bool?,
+            isDinner: recipeData['isDinner'] as bool?,
+            isPlan: recipeData['isPlan'] as bool?,
+            isFave: recipeData['isFave'] as bool?,
+            recipeTags: recipeData['recipeTags'] as List<dynamic>?));
       });
       _newData.shuffle();
       final trimmedRandom = _newData.take(5);
@@ -86,7 +86,7 @@ class RecipesProvider with ChangeNotifier {
 
   Future<void> setFetchRecipes() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
-    uid = _auth.currentUser.uid;
+    uid = _auth.currentUser!.uid;
 
     final Dio dio = Dio();
 
@@ -101,16 +101,16 @@ class RecipesProvider with ChangeNotifier {
         _newData.add(Recipe(
             recipeId: recipeId,
             creatorId: uid,
-            creationDate: recipeData['creationDate'] as String,
-            mealTitle: recipeData['mealTitle'] as String,
-            mealDescription: recipeData['mealDescription'] as String,
-            mealInstructions: recipeData['mealInstructions'] as String,
-            mealImage: recipeData['mealImage'] as String,
-            isLunch: recipeData['isLunch'] as bool,
-            isDinner: recipeData['isDinner'] as bool,
-            isPlan: recipeData['isPlan'] as bool,
-            isFave: recipeData['isFave'] as bool,
-            recipeTags: recipeData['recipeTags'] as List<dynamic>));
+            creationDate: recipeData['creationDate'] as String?,
+            mealTitle: recipeData['mealTitle'] as String?,
+            mealDescription: recipeData['mealDescription'] as String?,
+            mealInstructions: recipeData['mealInstructions'] as String?,
+            mealImage: recipeData['mealImage'] as String?,
+            isLunch: recipeData['isLunch'] as bool?,
+            isDinner: recipeData['isDinner'] as bool?,
+            isPlan: recipeData['isPlan'] as bool?,
+            isFave: recipeData['isFave'] as bool?,
+            recipeTags: recipeData['recipeTags'] as List<dynamic>?));
       });
       _recipeItems = _newData;
     } else {
@@ -173,7 +173,7 @@ class RecipesProvider with ChangeNotifier {
       });
 
       final createdRecipe = Recipe(
-          recipeId: response.data['recipeId'] as String,
+          recipeId: response.data['recipeId'] as String?,
           creationDate: DateTime.now().toIso8601String(),
           mealTitle: newRecipe.mealTitle,
           mealDescription: newRecipe.mealDescription,
@@ -191,7 +191,7 @@ class RecipesProvider with ChangeNotifier {
     }
   }
 
-  Future<void> deleteRecipe({String recipeId, String imageUrl}) async {
+  Future<void> deleteRecipe({String? recipeId, required String imageUrl}) async {
     final Dio dio = Dio();
     final url = '$baseUrl/$uid/recipes/$recipeId.json';
 
@@ -217,7 +217,7 @@ class RecipesProvider with ChangeNotifier {
     }
   }
 
-  Future<void> editRecipe({Recipe editedRecipe, String recipeId}) async {
+  Future<void> editRecipe({required Recipe editedRecipe, String? recipeId}) async {
     final Dio dio = Dio();
     final url = '$baseUrl/$uid/recipes/$recipeId.json';
 
@@ -257,10 +257,10 @@ class RecipesProvider with ChangeNotifier {
     }
   }
 
-  Future<void> toggleFave({String id}) async {
+  Future<void> toggleFave({String? id}) async {
     
     _recipeItems.forEach((element) =>
-        {if (element.recipeId == id) element.isFave = !element.isFave});
+        {if (element.recipeId == id) element.isFave = !element.isFave!});
     notifyListeners();
     
     final Dio dio = Dio();
@@ -275,9 +275,9 @@ class RecipesProvider with ChangeNotifier {
     }
   }
 
-  Future<void> togglePlan({String id}) async {
+  Future<void> togglePlan({String? id}) async {
     _recipeItems.forEach((element) =>
-        {if (element.recipeId == id) element.isPlan = !element.isPlan});
+        {if (element.recipeId == id) element.isPlan = !element.isPlan!});
     notifyListeners();
     
     final Dio dio = Dio();

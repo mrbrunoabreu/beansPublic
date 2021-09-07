@@ -10,9 +10,9 @@ import 'package:provider/provider.dart';
 import 'package:blackbeans/widgets/pickTags.dart';
 
 class EditRecipeScreen extends StatefulWidget {
-  const EditRecipeScreen({this.recipe, Key key}) : super(key: key);
+  const EditRecipeScreen({this.recipe, Key? key}) : super(key: key);
 
-  final Recipe recipe;
+  final Recipe? recipe;
   static const routeName = 'editrecipe-screen';
 
   @override
@@ -25,7 +25,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   final _recipeFocus = FocusNode();
   final List<String> _createdTags = [];
 
-  String mealImageUrl;
+  String? mealImageUrl;
   final Recipe _editedRecipe = Recipe(
       recipeId: '',
       creatorId: '',
@@ -38,20 +38,20 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
       recipeTags: []);
 
   Future<void> _saveForm(Recipe editedRecipe) async {
-    final isValid = _formKey.currentState.validate();
+    final isValid = _formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
 
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
 
     editedRecipe.recipeTags = _createdTags;
     _editedRecipe.mealImage =
-        mealImageUrl.isEmpty ? widget.recipe.mealImage : mealImageUrl;
+        mealImageUrl!.isEmpty ? widget.recipe!.mealImage : mealImageUrl;
 
     try {
       await Provider.of<RecipesProvider>(context, listen: false).editRecipe(
-          editedRecipe: editedRecipe, recipeId: widget.recipe.recipeId);
+          editedRecipe: editedRecipe, recipeId: widget.recipe!.recipeId);
     } catch (error) {
       print(error);
     }
@@ -122,7 +122,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                               style: Theme.of(context).textTheme.bodyText1,
                               textInputAction: TextInputAction.next,
                               autofocus: true,
-                              initialValue: widget.recipe.mealTitle,
+                              initialValue: widget.recipe!.mealTitle,
                               onFieldSubmitted: (_) {
                                 FocusScope.of(context)
                                     .requestFocus(_subtitleFocus);
@@ -130,11 +130,11 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                               textCapitalization: TextCapitalization.sentences,
                               decoration: const InputDecoration(
                                   hintText: 'Recipe title'),
-                              onSaved: (String value) {
+                              onSaved: (String? value) {
                                 _editedRecipe.mealTitle = value;
                               },
                               validator: (value) {
-                                if (value.isEmpty || value.length < 3) {
+                                if (value!.isEmpty || value.length < 3) {
                                   return 'Please enter at least 3 characters';
                                 }
                                 return null;
@@ -145,7 +145,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                               style: Theme.of(context).textTheme.bodyText1,
                               focusNode: _subtitleFocus,
                               textInputAction: TextInputAction.next,
-                              initialValue: widget.recipe.mealDescription,
+                              initialValue: widget.recipe!.mealDescription,
                               onFieldSubmitted: (_) {
                                 FocusScope.of(context)
                                     .requestFocus(_recipeFocus);
@@ -153,11 +153,11 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                               textCapitalization: TextCapitalization.sentences,
                               decoration: const InputDecoration(
                                   hintText: 'Recipe subtitle'),
-                              onSaved: (String value) {
+                              onSaved: (String? value) {
                                 _editedRecipe.mealDescription = value;
                               },
                               validator: (value) {
-                                if (value.isEmpty || value.length < 3) {
+                                if (value!.isEmpty || value.length < 3) {
                                   return 'Please enter at least 3 characters';
                                 }
                                 return null;
@@ -172,7 +172,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                                 style: Theme.of(context).textTheme.bodyText1,
                                 textCapitalization:
                                     TextCapitalization.sentences,
-                                initialValue: widget.recipe.mealInstructions,
+                                initialValue: widget.recipe!.mealInstructions,
                                 onFieldSubmitted: (_) {
                                   final FocusScopeNode currentFocus =
                                       FocusScope.of(context);
@@ -188,14 +188,14 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                                 decoration: const InputDecoration(
                                   hintText: 'Recipe instructions (optional)',
                                 ),
-                                onSaved: (String value) {
+                                onSaved: (String? value) {
                                   _editedRecipe.mealInstructions = value;
                                 },
                               ),
                             ),
                             const SizedBox(height: 15),
                             PickTags(
-                              initialTags: widget.recipe.recipeTags
+                              initialTags: widget.recipe!.recipeTags!
                                   .map((e) => e.toString())
                                   .toList(),
                               onTag: (tag) {
@@ -211,7 +211,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                                 title: Text('Lunch',
                                     style:
                                         Theme.of(context).textTheme.bodyText1),
-                                value: widget.recipe.isLunch,
+                                value: widget.recipe!.isLunch!,
                                 onChanged: (bool val) {
                                   setState(() {
                                     _editedRecipe.isLunch = val;
@@ -223,7 +223,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                                 title: Text('Dinner',
                                     style:
                                         Theme.of(context).textTheme.bodyText1),
-                                value: widget.recipe.isDinner,
+                                value: widget.recipe!.isDinner!,
                                 onChanged: (bool val) {
                                   setState(() {
                                     _editedRecipe.isDinner = val;
@@ -234,7 +234,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                                   .pushNamed(ImageCaptureScreen.routeName)
                                   .then((value) {
                                 setState(() {
-                                  mealImageUrl = value as String;
+                                  mealImageUrl = value as String?;
                                   _editedRecipe.mealImage = mealImageUrl;
                                 });
                               }),
@@ -246,8 +246,8 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(14))),
                                   child: (mealImageUrl != null)
-                                      ? Image.network(mealImageUrl)
-                                      : Image.network(widget.recipe.mealImage)),
+                                      ? Image.network(mealImageUrl!)
+                                      : Image.network(widget.recipe!.mealImage!)),
                             ),
                             const SizedBox(height: 10),
                             Text(
@@ -272,8 +272,8 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
 class SettingsItem extends StatelessWidget {
   const SettingsItem({this.settingsTitle, this.onPressedAction});
 
-  final String settingsTitle;
-  final Function onPressedAction;
+  final String? settingsTitle;
+  final Function? onPressedAction;
 
   @override
   Widget build(BuildContext context) {
@@ -283,7 +283,7 @@ class SettingsItem extends StatelessWidget {
         Row(
           children: [
             Text(
-              settingsTitle,
+              settingsTitle!,
               style: Theme.of(context).textTheme.headline5,
             ),
           ],

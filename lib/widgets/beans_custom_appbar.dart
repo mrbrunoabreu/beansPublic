@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class BeansCustomAppBar extends StatelessWidget {
   final bool isBackButton;
-  final String centerTitle;
-  final Icon trailingIcon;
+  final String? centerTitle;
+  final Icon? trailingIcon;
   final Color trailingIconColor;
-  final VoidCallback trailingIconAction;
-  final Color backgroundColor;
+  final VoidCallback? trailingIconAction;
+  final Color? backgroundColor;
 
   const BeansCustomAppBar({
     this.isBackButton = false,
@@ -15,7 +15,7 @@ class BeansCustomAppBar extends StatelessWidget {
     this.trailingIconColor = Colors.blue,
     this.trailingIconAction,
     this.backgroundColor,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -46,7 +46,7 @@ class BeansCustomAppBar extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
               child: IconButton(
-                icon: trailingIcon,
+                icon: trailingIcon!,
                 onPressed: trailingIconAction,
               ),
             )

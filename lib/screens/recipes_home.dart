@@ -75,8 +75,8 @@ class _RecipesHomeState extends State<RecipesHome> {
 
 class RecipesMain extends StatelessWidget {
   const RecipesMain({
-    Key key,
-    @required this.recipesProvider,
+    Key? key,
+    required this.recipesProvider,
   }) : super(key: key);
 
   final RecipesProvider recipesProvider;
@@ -119,52 +119,99 @@ class RecipesMain extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  FlatButton(
-                      color: recipesProvider.showLunch
-                          ? Colors.blue[700]
-                          : Theme.of(context).buttonColor,
-                      disabledColor: Colors.red,
+                  TextButton(
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(70, 30),
+                          backgroundColor: recipesProvider.showLunch
+                              ? Colors.blue[700]
+                              : Theme.of(context).buttonColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
                       onPressed: () => recipesProvider.toggleShowLunch(),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
                       child: Text('Lunch',
                           style: Theme.of(context).textTheme.button)),
                   const SizedBox(width: 10),
-                  FlatButton(
-                    color: recipesProvider.showDinner
-                        ? Colors.blue[700]
-                        : Theme.of(context).buttonColor,
-                    disabledColor: Colors.red,
-                    onPressed: () => recipesProvider.toggleShowDinner(),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text('Dinner',
-                        style: Theme.of(context).textTheme.button),
-                  ),
+                  TextButton(
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(70, 30),
+                          backgroundColor: recipesProvider.showDinner
+                              ? Colors.blue[700]
+                              : Theme.of(context).buttonColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      onPressed: () => recipesProvider.toggleShowDinner(),
+                      child: Text('Dinner',
+                          style: Theme.of(context).textTheme.button)),
                   const SizedBox(width: 10),
-                  FlatButton(
-                    color: recipesProvider.showPlan
-                        ? Colors.blue[700]
-                        : Theme.of(context).buttonColor,
-                    disabledColor: Colors.red,
-                    onPressed: () => recipesProvider.toggleShowPlan(),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text('Plans',
-                        style: Theme.of(context).textTheme.button),
-                  ),
+                  TextButton(
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(70, 30),
+                          backgroundColor: recipesProvider.showPlan
+                              ? Colors.blue[700]
+                              : Theme.of(context).buttonColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      onPressed: () => recipesProvider.toggleShowPlan(),
+                      child: Text('Plans',
+                          style: Theme.of(context).textTheme.button)),
                   const SizedBox(width: 10),
-                  FlatButton(
-                    color: recipesProvider.showFave
-                        ? Colors.blue[700]
-                        : Theme.of(context).buttonColor,
-                    disabledColor: Colors.red,
-                    onPressed: () => recipesProvider.toggleShowFave(),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text('Faves',
-                        style: Theme.of(context).textTheme.button),
-                  ),
+                  TextButton(
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(70, 30),
+                          backgroundColor: recipesProvider.showFave
+                              ? Colors.blue[700]
+                              : Theme.of(context).buttonColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      onPressed: () => recipesProvider.toggleShowFave(),
+                      child: Text('Faves',
+                          style: Theme.of(context).textTheme.button)),
+                  // FlatButton(
+                  //     color: recipesProvider.showLunch
+                  //         ? Colors.blue[700]
+                  //         : Theme.of(context).buttonColor,
+                  //     disabledColor: Colors.red,
+                  //     onPressed: () => recipesProvider.toggleShowLunch(),
+                  //     shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(10)),
+                  //     child: Text('Lunch',
+                  //         style: Theme.of(context).textTheme.button)),
+                  // const SizedBox(width: 10),
+                  // FlatButton(
+                  //   color: recipesProvider.showDinner
+                  //       ? Colors.blue[700]
+                  //       : Theme.of(context).buttonColor,
+                  //   disabledColor: Colors.red,
+                  //   onPressed: () => recipesProvider.toggleShowDinner(),
+                  //   shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(10)),
+                  //   child: Text('Dinner',
+                  //       style: Theme.of(context).textTheme.button),
+                  // ),
+                  // const SizedBox(width: 10),
+                  // FlatButton(
+                  //   color: recipesProvider.showPlan
+                  //       ? Colors.blue[700]
+                  //       : Theme.of(context).buttonColor,
+                  //   disabledColor: Colors.red,
+                  //   onPressed: () => recipesProvider.toggleShowPlan(),
+                  //   shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(10)),
+                  //   child: Text('Plans',
+                  //       style: Theme.of(context).textTheme.button),
+                  // ),
+                  // const SizedBox(width: 10),
+                  // FlatButton(
+                  //   color: recipesProvider.showFave
+                  //       ? Colors.blue[700]
+                  //       : Theme.of(context).buttonColor,
+                  //   disabledColor: Colors.red,
+                  //   onPressed: () => recipesProvider.toggleShowFave(),
+                  //   shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(10)),
+                  //   child: Text('Faves',
+                  //       style: Theme.of(context).textTheme.button),
+                  // ),
                 ],
               ),
               const SizedBox(height: 15),
@@ -232,8 +279,8 @@ class RecipesMain extends StatelessWidget {
 
 class StaffSuggestions extends StatefulWidget {
   const StaffSuggestions({
-    Key key,
-    @required this.recipesProvider,
+    Key? key,
+    required this.recipesProvider,
   }) : super(key: key);
 
   final RecipesProvider recipesProvider;
@@ -243,7 +290,7 @@ class StaffSuggestions extends StatefulWidget {
 }
 
 class _StaffSuggestionsState extends State<StaffSuggestions> {
-  Future _suggestions;
+  Future? _suggestions;
   bool _needRefresh = true;
 
   @override
@@ -287,8 +334,9 @@ class _StaffSuggestionsState extends State<StaffSuggestions> {
                                     bottomRight: Radius.circular(10)),
                                 boxShadow: [
                                   BoxShadow(
-                                    color:
-                                        Theme.of(context).cardTheme.shadowColor,
+                                    color: Theme.of(context)
+                                        .cardTheme
+                                        .shadowColor!,
                                     spreadRadius: 2,
                                     blurRadius: 5,
                                     offset: const Offset(
@@ -308,7 +356,7 @@ class _StaffSuggestionsState extends State<StaffSuggestions> {
                                           image: DecorationImage(
                                               fit: BoxFit.cover,
                                               image:
-                                                  NetworkImage(e.mealImage))),
+                                                  NetworkImage(e.mealImage!))),
                                       height: 80,
                                       width: 140,
                                     ),
@@ -320,7 +368,7 @@ class _StaffSuggestionsState extends State<StaffSuggestions> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(e.mealTitle,
+                                          Text(e.mealTitle!,
                                               softWrap: true,
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
@@ -328,7 +376,7 @@ class _StaffSuggestionsState extends State<StaffSuggestions> {
                                                   .textTheme
                                                   .headline3),
                                           const Divider(),
-                                          Text(e.mealDescription,
+                                          Text(e.mealDescription!,
                                               softWrap: true,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -352,8 +400,8 @@ class _StaffSuggestionsState extends State<StaffSuggestions> {
 
 class SuggestionsList extends StatelessWidget {
   const SuggestionsList({
-    Key key,
-    @required this.recipesProvider,
+    Key? key,
+    required this.recipesProvider,
   }) : super(key: key);
 
   final RecipesProvider recipesProvider;
@@ -383,7 +431,7 @@ class SuggestionsList extends StatelessWidget {
                               bottomRight: Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).cardTheme.shadowColor,
+                              color: Theme.of(context).cardTheme.shadowColor!,
                               spreadRadius: 2,
                               blurRadius: 5,
                               offset: const Offset(
@@ -402,7 +450,7 @@ class SuggestionsList extends StatelessWidget {
                                     color: Colors.indigo,
                                     image: DecorationImage(
                                         fit: BoxFit.cover,
-                                        image: NetworkImage(e.mealImage))),
+                                        image: NetworkImage(e.mealImage!))),
                                 height: 80,
                                 width: 140,
                               ),
@@ -413,7 +461,7 @@ class SuggestionsList extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(e.mealTitle,
+                                    Text(e.mealTitle!,
                                         softWrap: true,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -421,7 +469,7 @@ class SuggestionsList extends StatelessWidget {
                                             .textTheme
                                             .headline3),
                                     const Divider(),
-                                    Text(e.mealDescription,
+                                    Text(e.mealDescription!,
                                         softWrap: true,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -444,7 +492,7 @@ class SuggestionsList extends StatelessWidget {
 
 class RecipeCollectionList extends StatefulWidget {
   const RecipeCollectionList({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -452,7 +500,7 @@ class RecipeCollectionList extends StatefulWidget {
 }
 
 class _RecipeCollectionListState extends State<RecipeCollectionList> {
-  Future _initialRecipes;
+  Future? _initialRecipes;
 
   @override
   void initState() {
@@ -526,7 +574,7 @@ class _RecipeCollectionListState extends State<RecipeCollectionList> {
                                                       recipeId: recipes[index]
                                                           .recipeId,
                                                       imageUrl: recipes[index]
-                                                          .mealImage)
+                                                          .mealImage!)
                                                   .then(Navigator.of(context)
                                                       .pop),
                                               child: const Text('OK'))
@@ -542,11 +590,12 @@ class _RecipeCollectionListState extends State<RecipeCollectionList> {
                                 child: SizedBox(
                                   height: 60,
                                   width: 80,
-                                  child: Image.network(recipes[index].mealImage,
+                                  child: Image.network(
+                                      recipes[index].mealImage!,
                                       fit: BoxFit.cover),
                                 ),
                               ),
-                              title: Text(recipes[index].mealTitle,
+                              title: Text(recipes[index].mealTitle!,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: true,
@@ -557,7 +606,7 @@ class _RecipeCollectionListState extends State<RecipeCollectionList> {
                                   IconButton(
                                       icon: Icon(Icons.favorite,
                                           size: 16,
-                                          color: recipes[index].isFave
+                                          color: recipes[index].isFave!
                                               ? Colors.red
                                               : Colors.grey),
                                       onPressed: () =>
@@ -567,7 +616,7 @@ class _RecipeCollectionListState extends State<RecipeCollectionList> {
                                   IconButton(
                                       icon: Icon(Icons.restaurant,
                                           size: 16,
-                                          color: recipes[index].isPlan
+                                          color: recipes[index].isPlan!
                                               ? Colors.red
                                               : Colors.grey),
                                       onPressed: () =>

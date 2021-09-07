@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
                 'Welcome to BEANS',
                 style: Theme.of(context)
                     .textTheme
-                    .headline1
+                    .headline1!
                     .copyWith(color: Colors.black),
               ),
               const SizedBox(height: 18),
@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextField(
                       style: Theme.of(context)
                           .textTheme
-                          .headline5
+                          .headline5!
                           .copyWith(color: Colors.black),
                       controller: emailController,
                       decoration: const InputDecoration(
@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextField(
                       style: Theme.of(context)
                           .textTheme
-                          .headline5
+                          .headline5!
                           .copyWith(color: Colors.black),
                       obscureText: true,
                       controller: passwordController,

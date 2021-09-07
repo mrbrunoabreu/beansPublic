@@ -1,5 +1,11 @@
+import 'package:blackbeans/auth/auth_wrapper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:blackbeans/auth/authService.dart';
-import 'package:blackbeans/auth/authWrapper.dart';
+
 import 'package:blackbeans/bloc/beansta_provider.dart';
 import 'package:blackbeans/bloc/recipes_provider.dart';
 import 'package:blackbeans/bloc/user_repository.dart';
@@ -13,14 +19,9 @@ import 'package:blackbeans/screens/image_capture_screen.dart';
 import 'package:blackbeans/screens/recipe_detail.dart';
 import 'package:blackbeans/screens/recipes_home.dart';
 import 'package:blackbeans/screens/reset_password.dart';
-import 'package:blackbeans/screens/telateste.dart';
 import 'package:blackbeans/screens/user_profile_screen.dart';
 import 'package:blackbeans/theme.dart';
 import 'package:blackbeans/widgets/switch_theme.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,12 +43,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<UserRepository>(create: (_) => UserRepository()),
         ChangeNotifierProvider<BeanstaProvider>(
             create: (_) => BeanstaProvider()),
-        ChangeNotifierProvider<SwitchTheme>(create: (_) => SwitchTheme()),
+        ChangeNotifierProvider<SwitchBeansTheme>(create: (_) => SwitchBeansTheme()),
         StreamProvider(
+          initialData: null,
           create: (context) => context.read<AuthService>().authStateChanges,
         )
       ],
-      child: Consumer<SwitchTheme>(
+      child: Consumer<SwitchBeansTheme>(
         builder: (context, switchTheme, child) => MaterialApp(
           title: 'BEANS',
           theme:
@@ -61,7 +63,6 @@ class MyApp extends StatelessWidget {
             AddRecipeScreen.routeName: (ctx) => const AddRecipeScreen(),
             EditRecipeScreen.routeName: (ctx) => const EditRecipeScreen(),
             ImageCaptureScreen.routeName: (ctx) => const ImageCaptureScreen(),
-            TelaTeste.routeName: (ctx) => const TelaTeste(),
             BeanstaHome.routeName: (ctx) => const BeanstaHome(),
             BeanstaAddPhotoScreen.routeName: (ctx) =>
                 const BeanstaAddPhotoScreen(),

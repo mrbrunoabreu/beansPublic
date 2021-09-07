@@ -2,7 +2,7 @@ import 'package:blackbeans/widgets/pickTags.dart';
 import 'package:flutter/material.dart';
 
 class TelaTeste extends StatefulWidget {
-  const TelaTeste({ Key key }) : super(key: key);
+  const TelaTeste({ Key? key }) : super(key: key);
 
   static const routeName = 'telateste';
 

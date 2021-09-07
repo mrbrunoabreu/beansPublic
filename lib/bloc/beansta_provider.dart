@@ -1,16 +1,17 @@
-import 'package:blackbeans/models/beansta_photo.dart';
-import 'package:blackbeans/models/profile.dart';
-import 'package:dio/dio.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../models/beansta_photo.dart';
+import '../models/profile.dart';
 
 class BeanstaProvider with ChangeNotifier {
   final String baseUrl = 'https://beans-aa4aa.firebaseio.com/';
 
   Future addPhotoItem(
-      {BeanstaPhoto newphoto, String photoUrl, Profile user}) async {
+      {required BeanstaPhoto newphoto, String? photoUrl, required Profile user}) async {
     final CollectionReference timeLineCollection =
         FirebaseFirestore.instance.collection('beansTimeLine');
 
@@ -30,7 +31,7 @@ class BeanstaProvider with ChangeNotifier {
   }
 
   Future deletePhotoItem(
-      {String mealImageUrl, String itemId, Profile user}) async {
+      {required String mealImageUrl, String? itemId, required Profile user}) async {
     final CollectionReference timeLineCollection =
         FirebaseFirestore.instance.collection('beansTimeLine');
 
@@ -62,7 +63,7 @@ class BeanstaProvider with ChangeNotifier {
     }
   }
 
-  Future addFavorite({String item, Profile user}) async {
+  Future addFavorite({String? item, required Profile user}) async {
     var timeLineDoc =
         FirebaseFirestore.instance.collection('beansTimeLine').doc(item);
 
@@ -73,7 +74,7 @@ class BeanstaProvider with ChangeNotifier {
   }
 
   Future addLikeNotification(
-      {String item, String itemUid, String userName}) async {
+      {String? item, String? itemUid, String? userName}) async {
     var timeLineNotificationDoc = FirebaseFirestore.instance
         .collection('beansTimeLineNotifications')
         .doc(itemUid)
@@ -87,7 +88,7 @@ class BeanstaProvider with ChangeNotifier {
     });
   }
 
-  Future removeFavorite({String item, Profile user}) async {
+  Future removeFavorite({String? item, required Profile user}) async {
     final timeLineDoc =
         FirebaseFirestore.instance.collection('beansTimeLine').doc(item);
 
@@ -101,7 +102,7 @@ class BeanstaProvider with ChangeNotifier {
     }
   }
 
-  Future addComment({String comment, String item, String author}) async {
+  Future addComment({String? comment, String? item, String? author}) async {
     final timeLineDoc = FirebaseFirestore.instance
         .collection('beansTimeLine')
         .doc(item)

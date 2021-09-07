@@ -1,5 +1,5 @@
 import 'package:blackbeans/auth/complete_registration.dart';
-import 'package:blackbeans/bloc/beansta_provider.dart';
+import '../bloc/beansta_provider.dart';
 import 'package:blackbeans/bloc/user_repository.dart';
 import 'package:blackbeans/models/beansta_photo.dart';
 import 'package:blackbeans/models/profile.dart';
@@ -12,7 +12,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 
 class BeanstaAddPhotoScreen extends StatefulWidget {
-  const BeanstaAddPhotoScreen({Key key}) : super(key: key);
+  const BeanstaAddPhotoScreen({Key? key}) : super(key: key);
 
   static const routeName = 'beansta-add-photo';
 
@@ -24,9 +24,9 @@ class _BeanstaAddPhotoScreenState extends State<BeanstaAddPhotoScreen> {
   final _formKey = GlobalKey<FormState>();
   final _captionFocus = FocusNode();
   bool profileCheck = true;
-  Profile user;
+  late Profile user;
 
-  String newPhotoUrl;
+  String? newPhotoUrl;
   final BeanstaPhoto _newPhoto = BeanstaPhoto();
 
   @override
@@ -42,12 +42,12 @@ class _BeanstaAddPhotoScreenState extends State<BeanstaAddPhotoScreen> {
   }
 
   Future<void> _saveForm(BeanstaPhoto newPhoto) async {
-    final isValid = _formKey.currentState.validate();
+    final isValid = _formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
 
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
 
     try {
       await Provider.of<BeanstaProvider>(context, listen: false)
@@ -129,11 +129,11 @@ class _BeanstaAddPhotoScreenState extends State<BeanstaAddPhotoScreen> {
                                     TextCapitalization.sentences,
                                 decoration: const InputDecoration(
                                     hintText: 'Photo location'),
-                                onSaved: (String value) {
+                                onSaved: (String? value) {
                                   _newPhoto.itemLocation = value;
                                 },
                                 validator: (value) {
-                                  if (value.isEmpty || value.length < 3) {
+                                  if (value!.isEmpty || value.length < 3) {
                                     return 'Please enter at least 3 characters';
                                   }
                                   return null;
@@ -164,7 +164,7 @@ class _BeanstaAddPhotoScreenState extends State<BeanstaAddPhotoScreen> {
                                   decoration: const InputDecoration(
                                     hintText: 'Photo caption (optional)',
                                   ),
-                                  onSaved: (String value) {
+                                  onSaved: (String? value) {
                                     _newPhoto.itemDescription = value;
                                   },
                                 ),
@@ -176,7 +176,7 @@ class _BeanstaAddPhotoScreenState extends State<BeanstaAddPhotoScreen> {
                                               ImageCaptureScreen.routeName)
                                           .then((value) {
                                         setState(() {
-                                          newPhotoUrl = value as String;
+                                          newPhotoUrl = value as String?;
                                           _newPhoto.itemPhoto = newPhotoUrl;
                                         });
                                       }),
@@ -188,7 +188,7 @@ class _BeanstaAddPhotoScreenState extends State<BeanstaAddPhotoScreen> {
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(14))),
                                       child: (newPhotoUrl != null)
-                                          ? Image.network(newPhotoUrl)
+                                          ? Image.network(newPhotoUrl!)
                                           : const Icon(Ionicons.image,
                                               color: Colors.black54))),
                               const SizedBox(height: 10),

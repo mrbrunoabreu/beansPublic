@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:blackbeans/widgets/pickTags.dart';
 
 class AddRecipeScreen extends StatefulWidget {
-  const AddRecipeScreen({Key key}) : super(key: key);
+  const AddRecipeScreen({Key? key}) : super(key: key);
 
   static const routeName = 'addrecipe-screen';
 
@@ -27,9 +27,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   final _recipeFocus = FocusNode();
   final List<String> _createdTags = [];
   bool profileCheck = true;
-  Profile user;
+  late Profile user;
 
-  String mealImageUrl;
+  String? mealImageUrl;
   final Recipe _newRecipe = Recipe(
       creatorId: '',
       mealImage: '',
@@ -53,12 +53,12 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   }
 
   Future<void> _saveForm(Recipe newRecipe) async {
-    final isValid = _formKey.currentState.validate();
+    final isValid = _formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
 
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
 
     try {
       newRecipe.recipeTags = _createdTags;
@@ -143,11 +143,11 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                     TextCapitalization.sentences,
                                 decoration: const InputDecoration(
                                     hintText: 'Recipe title'),
-                                onSaved: (String value) {
+                                onSaved: (String? value) {
                                   _newRecipe.mealTitle = value;
                                 },
                                 validator: (value) {
-                                  if (value.isEmpty || value.length < 3) {
+                                  if (value!.isEmpty || value.length < 3) {
                                     return 'Please enter at least 3 characters';
                                   }
                                   return null;
@@ -166,11 +166,11 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                     TextCapitalization.sentences,
                                 decoration: const InputDecoration(
                                     hintText: 'Recipe subtitle'),
-                                onSaved: (String value) {
+                                onSaved: (String? value) {
                                   _newRecipe.mealDescription = value;
                                 },
                                 validator: (value) {
-                                  if (value.isEmpty || value.length < 3) {
+                                  if (value!.isEmpty || value.length < 3) {
                                     return 'Please enter at least 3 characters';
                                   }
                                   return null;
@@ -200,7 +200,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                   decoration: const InputDecoration(
                                     hintText: 'Recipe instructions (optional)',
                                   ),
-                                  onSaved: (String value) {
+                                  onSaved: (String? value) {
                                     _newRecipe.mealInstructions = value;
                                   },
                                 ),
@@ -221,7 +221,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText1),
-                                  value: _newRecipe.isLunch,
+                                  value: _newRecipe.isLunch!,
                                   onChanged: (bool val) {
                                     setState(() {
                                       _newRecipe.isLunch = val;
@@ -234,7 +234,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText1),
-                                  value: _newRecipe.isDinner,
+                                  value: _newRecipe.isDinner!,
                                   onChanged: (bool val) {
                                     setState(() {
                                       _newRecipe.isDinner = val;
@@ -246,7 +246,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                               ImageCaptureScreen.routeName)
                                           .then((value) {
                                         setState(() {
-                                          mealImageUrl = value as String;
+                                          mealImageUrl = value as String?;
                                           _newRecipe.mealImage = mealImageUrl;
                                         });
                                       }),
@@ -258,7 +258,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(14))),
                                       child: (mealImageUrl != null)
-                                          ? Image.network(mealImageUrl)
+                                          ? Image.network(mealImageUrl!)
                                           : const Icon(Ionicons.image,
                                               color: Colors.black54))),
                               const SizedBox(height: 10),
@@ -285,8 +285,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 class SettingsItem extends StatelessWidget {
   const SettingsItem({this.settingsTitle, this.onPressedAction});
 
-  final String settingsTitle;
-  final Function onPressedAction;
+  final String? settingsTitle;
+  final Function? onPressedAction;
 
   @override
   Widget build(BuildContext context) {
@@ -296,7 +296,7 @@ class SettingsItem extends StatelessWidget {
         Row(
           children: [
             Text(
-              settingsTitle,
+              settingsTitle!,
               style: Theme.of(context).textTheme.headline5,
             ),
           ],

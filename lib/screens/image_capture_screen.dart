@@ -7,7 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:ionicons/ionicons.dart';
 
 class ImageCaptureScreen extends StatefulWidget {
-  const ImageCaptureScreen({Key key}) : super(key: key);
+  const ImageCaptureScreen({Key? key}) : super(key: key);
 
   static const routeName = 'image-capture-screen';
 
@@ -16,22 +16,22 @@ class ImageCaptureScreen extends StatefulWidget {
 }
 
 class _ImageCaptureScreenState extends State<ImageCaptureScreen> {
-  File _imageFile;
-  String fileName;
+  File? _imageFile;
+  String? fileName;
 
   Future<void> _pickImage(ImageSource source) async {
     final selected = await ImagePicker()
         .getImage(source: source, maxWidth: 800, maxHeight: 800);
 
     setState(() {
-      _imageFile = File(selected.path);
-      fileName = path.basename(_imageFile.path);
+      _imageFile = File(selected!.path);
+      fileName = path.basename(_imageFile!.path);
     });
   }
 
   Future<void> _cropImage() async {
-    final File cropped = await ImageCropper.cropImage(
-        sourcePath: _imageFile.path,
+    final File? cropped = await ImageCropper.cropImage(
+        sourcePath: _imageFile!.path,
         cropStyle: CropStyle.rectangle,
         aspectRatio: const CropAspectRatio(ratioX: 800, ratioY: 800));
 
@@ -72,7 +72,7 @@ class _ImageCaptureScreenState extends State<ImageCaptureScreen> {
       )),
       body: ListView(children: [
         if (_imageFile != null) ...[
-          SizedBox(width: 400, height: 400, child: Image.file(_imageFile)),
+          SizedBox(width: 400, height: 400, child: Image.file(_imageFile!)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

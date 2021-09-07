@@ -78,7 +78,7 @@ class AppTheme {
       ),
       cardTheme: CardTheme(
         color: Colors.white,
-        shadowColor: Colors.blueGrey[400].withOpacity(0.2)
+        shadowColor: Colors.blueGrey[400]!.withOpacity(0.2)
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         selectedItemColor: Colors.blue,

@@ -1,4 +1,4 @@
-import 'package:blackbeans/bloc/beansta_provider.dart';
+import '../bloc/beansta_provider.dart';
 import 'package:blackbeans/models/beansta_comment.dart';
 import 'package:blackbeans/widgets/beans_custom_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,22 +14,22 @@ class BeanstaComments extends StatefulWidget {
 }
 
 class _BeanstaCommentsState extends State<BeanstaComments> {
-  List<QueryDocumentSnapshot> comments;
-  String _newComment;
+  List<QueryDocumentSnapshot>? comments;
+  String? _newComment;
 
-  Future<void> _saveForm({String item, String author}) async {
-    final isValid = _formKey.currentState.validate();
+  Future<void> _saveForm({String? item, String? author}) async {
+    final isValid = _formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
     try {
       await Provider.of<BeanstaProvider>(context, listen: false)
           .addComment(comment: _newComment, item: item, author: author);
     } catch (error) {
       print(error);
     }
-    _formKey.currentState.reset();
+    _formKey.currentState!.reset();
     // Navigator.canPop(context)
     //     ? Navigator.of(context).pop()
     //     : Navigator.of(context).popAndPushNamed(TimeLineScreen.routeName);
@@ -40,7 +40,7 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context).settings.arguments as BeanstaComment;
+    final args = ModalRoute.of(context)!.settings.arguments as BeanstaComment;
     return Scaffold(
       body: Column(
         children: [
@@ -62,11 +62,11 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
                           autocorrect: false,
                           textCapitalization: TextCapitalization.sentences,
                           style: Theme.of(context).textTheme.bodyText1,
-                          onSaved: (String value) {
+                          onSaved: (String? value) {
                             _newComment = value;
                           },
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value!.isEmpty) {
                               return 'Please enter a comment';
                             }
                             return null;
@@ -97,7 +97,7 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
     );
   }
 
-  Widget _commentsStream(String itemId) {
+  Widget _commentsStream(String? itemId) {
     return Expanded(
       flex: 5,
       child: StreamBuilder<QuerySnapshot>(
@@ -113,7 +113,7 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
                 : ListView.builder(
                     physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: snapshot.data.docs.length,
+                    itemCount: snapshot.data!.docs.length,
                     itemBuilder: (ctx, e) {
                       return SingleChildScrollView(
                           padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
@@ -121,14 +121,14 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  snapshot.data.docs
+                                  snapshot.data!.docs
                                       .elementAt(e)['commentAuthor']
                                       .toString(),
                                   style: Theme.of(context).textTheme.bodyText2),
                               const SizedBox(width: 5),
                               Flexible(
                                                               child: Text(
-                                    snapshot.data.docs
+                                    snapshot.data!.docs
                                         .elementAt(e)['comment']
                                         .toString(),
                                     style: Theme.of(context).textTheme.bodyText1),

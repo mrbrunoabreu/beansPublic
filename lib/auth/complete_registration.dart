@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 class CompleteRegistration extends StatefulWidget {
   const CompleteRegistration({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -24,15 +24,15 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
   Profile editedProfile = Profile();
-  String newProfilePhotoUrl;
+  String? newProfilePhotoUrl;
 
   Future<void> _saveForm(Profile editedProfile) async {
-    final isValid = _formKey.currentState.validate();
+    final isValid = _formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
 
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
 
     try {
       Provider.of<UserRepository>(context, listen: false).createProfile(
@@ -121,7 +121,7 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
                                 editedProfile.name = value;
                               },
                               validator: (value) {
-                                if (value.isEmpty || value.length < 3) {
+                                if (value!.isEmpty || value.length < 3) {
                                   return 'Please enter at least 3 characters';
                                 }
                                 return null;
@@ -143,7 +143,7 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
                                 editedProfile.lastName = value;
                               },
                               validator: (value) {
-                                if (value.isEmpty || value.length < 3) {
+                                if (value!.isEmpty || value.length < 3) {
                                   return 'Please enter at least 3 characters';
                                 }
                                 return null;
@@ -155,7 +155,7 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
                                   .pushNamed(ImageCaptureScreen.routeName)
                                   .then((value) {
                                 setState(() {
-                                  newProfilePhotoUrl = value as String;
+                                  newProfilePhotoUrl = value as String?;
                                   editedProfile.userPhotoUrl =
                                       newProfilePhotoUrl;
                                 });
@@ -169,7 +169,7 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
                                           Radius.circular(14))),
                                   child: editedProfile.userPhotoUrl != null
                                       ? Image.network(
-                                          editedProfile.userPhotoUrl)
+                                          editedProfile.userPhotoUrl!)
                                       : const Icon(Ionicons.camera)),
                             ),
                             const SizedBox(height: 10),
