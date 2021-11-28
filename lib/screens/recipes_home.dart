@@ -121,7 +121,7 @@ class RecipesMain extends StatelessWidget {
                 children: [
                   FlatButton(
                       color: recipesProvider.showLunch
-                          ? Colors.blue
+                          ? Colors.blue[700]
                           : Theme.of(context).buttonColor,
                       disabledColor: Colors.red,
                       onPressed: () => recipesProvider.toggleShowLunch(),
@@ -132,7 +132,7 @@ class RecipesMain extends StatelessWidget {
                   const SizedBox(width: 10),
                   FlatButton(
                     color: recipesProvider.showDinner
-                        ? Colors.blue
+                        ? Colors.blue[700]
                         : Theme.of(context).buttonColor,
                     disabledColor: Colors.red,
                     onPressed: () => recipesProvider.toggleShowDinner(),
@@ -144,7 +144,7 @@ class RecipesMain extends StatelessWidget {
                   const SizedBox(width: 10),
                   FlatButton(
                     color: recipesProvider.showPlan
-                        ? Colors.blue
+                        ? Colors.blue[700]
                         : Theme.of(context).buttonColor,
                     disabledColor: Colors.red,
                     onPressed: () => recipesProvider.toggleShowPlan(),
@@ -156,7 +156,7 @@ class RecipesMain extends StatelessWidget {
                   const SizedBox(width: 10),
                   FlatButton(
                     color: recipesProvider.showFave
-                        ? Colors.blue
+                        ? Colors.blue[700]
                         : Theme.of(context).buttonColor,
                     disabledColor: Colors.red,
                     onPressed: () => recipesProvider.toggleShowFave(),
@@ -208,7 +208,8 @@ class RecipesMain extends StatelessWidget {
               Container(
                   height: 100, color: Theme.of(context).scaffoldBackgroundColor)
             ]),
-            SuggestionsList(recipesProvider: recipesProvider),
+            StaffSuggestions(recipesProvider: recipesProvider),
+            // SuggestionsList(recipesProvider: recipesProvider),
           ],
         ),
         Padding(
@@ -225,6 +226,126 @@ class RecipesMain extends StatelessWidget {
         ),
         const Expanded(child: RecipeCollectionList()),
       ],
+    );
+  }
+}
+
+class StaffSuggestions extends StatefulWidget {
+  const StaffSuggestions({
+    Key key,
+    @required this.recipesProvider,
+  }) : super(key: key);
+
+  final RecipesProvider recipesProvider;
+
+  @override
+  _StaffSuggestionsState createState() => _StaffSuggestionsState();
+}
+
+class _StaffSuggestionsState extends State<StaffSuggestions> {
+  Future _suggestions;
+  bool _needRefresh = true;
+
+  @override
+  void initState() {
+    if (_needRefresh) {
+      _suggestions = widget.recipesProvider.staffSuggestions();
+      _needRefresh = false;
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: SizedBox(
+        height: 190,
+        child: FutureBuilder(
+            future: _suggestions,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: widget.recipesProvider.todaysSuggestions
+                      .map((e) => GestureDetector(
+                            onTap: () => Navigator.of(context).pushNamed(
+                                RecipeDetail.routeName,
+                                arguments: e),
+                            child: Container(
+                              margin: const EdgeInsets.all(8),
+                              height: 160,
+                              width: 140,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor,
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        Theme.of(context).cardTheme.shadowColor,
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: const Offset(
+                                        3, 3), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                        topRight: Radius.circular(12)),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.indigo,
+                                          image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image:
+                                                  NetworkImage(e.mealImage))),
+                                      height: 80,
+                                      width: 140,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(e.mealTitle,
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline3),
+                                          const Divider(),
+                                          Text(e.mealDescription,
+                                              softWrap: true,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2)
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ))
+                      .toList());
+            }),
+      ),
     );
   }
 }
@@ -294,12 +415,15 @@ class SuggestionsList extends StatelessWidget {
                                   children: [
                                     Text(e.mealTitle,
                                         softWrap: true,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline3),
                                     const Divider(),
                                     Text(e.mealDescription,
                                         softWrap: true,
+                                        maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme

@@ -1,5 +1,6 @@
 import 'package:blackbeans/bloc/user_repository.dart';
 import 'package:blackbeans/models/profile.dart';
+import 'package:blackbeans/screens/image_capture_screen.dart';
 import 'package:blackbeans/screens/recipes_home.dart';
 import 'package:blackbeans/screens/user_profile_screen.dart';
 import 'package:blackbeans/widgets/beans_custom_appbar.dart';
@@ -17,14 +18,13 @@ class CompleteRegistration extends StatefulWidget {
 }
 
 class _CompleteRegistrationState extends State<CompleteRegistration> {
-  
-    final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final _firstNameFocus = FocusNode();
   final _lastNameFocus = FocusNode();
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
   Profile editedProfile = Profile();
-
+  String newProfilePhotoUrl;
 
   Future<void> _saveForm(Profile editedProfile) async {
     final isValid = _formKey.currentState.validate();
@@ -34,13 +34,15 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
 
     _formKey.currentState.save();
 
-
     try {
-      Provider.of<UserRepository>(context, listen: false).createProfile(userName: editedProfile.name, userLastName: editedProfile.lastName, userPhotoUrl: editedProfile.userPhotoUrl);
+      Provider.of<UserRepository>(context, listen: false).createProfile(
+          userName: editedProfile.name,
+          userLastName: editedProfile.lastName,
+          userPhotoUrl: editedProfile.userPhotoUrl);
     } catch (error) {
       print(error);
     }
-      Navigator.of(context).popAndPushNamed(RecipesHome.routeName);
+    Navigator.of(context).popAndPushNamed(RecipesHome.routeName);
   }
 
   @override
@@ -53,7 +55,8 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
   }
 
   @override
-  Widget build(BuildContext context) {final screenArea = MediaQuery.of(context).size.height;
+  Widget build(BuildContext context) {
+    final screenArea = MediaQuery.of(context).size.height;
     return Scaffold(
       body: GestureDetector(
         onTap: FocusScope.of(context).unfocus,
@@ -78,16 +81,15 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
               children: [
                 SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: BeansCustomAppBar(
-                      trailingIcon: const Icon(
-                              Ionicons.checkmark,
-                              color: Colors.white,
-                              size: 22,
-                            ),
-                      trailingIconAction: () => _saveForm(editedProfile),
-                    )
-                  ),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: BeansCustomAppBar(
+                        trailingIcon: const Icon(
+                          Ionicons.checkmark,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                        trailingIconAction: () => _saveForm(editedProfile),
+                      )),
                 ),
                 Padding(
                   padding:
@@ -147,8 +149,17 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
                                 return null;
                               },
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             InkWell(
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed(ImageCaptureScreen.routeName)
+                                  .then((value) {
+                                setState(() {
+                                  newProfilePhotoUrl = value as String;
+                                  editedProfile.userPhotoUrl =
+                                      newProfilePhotoUrl;
+                                });
+                              }),
                               child: Container(
                                   height: 50,
                                   width: 50,
@@ -156,9 +167,11 @@ class _CompleteRegistrationState extends State<CompleteRegistration> {
                                       color: Colors.blueGrey[200],
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(14))),
-                                  child: editedProfile.userPhotoUrl != null ? Image.network(editedProfile.userPhotoUrl) : Icon(Ionicons.camera) ),
-                              onTap: () {},
-                              ),
+                                  child: editedProfile.userPhotoUrl != null
+                                      ? Image.network(
+                                          editedProfile.userPhotoUrl)
+                                      : const Icon(Ionicons.camera)),
+                            ),
                             const SizedBox(height: 10),
                             Text(
                               'Pick an image',

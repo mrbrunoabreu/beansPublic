@@ -1,6 +1,5 @@
 import 'package:blackbeans/bloc/beansta_provider.dart';
 import 'package:blackbeans/models/beansta_comment.dart';
-import 'package:blackbeans/screens/beansta_add_photo.dart';
 import 'package:blackbeans/widgets/beans_custom_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,6 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final _subtitleFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,7 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
     return Scaffold(
       body: Column(
         children: [
-          BeansCustomAppBar(
+          const BeansCustomAppBar(
             isBackButton: true,
           ),
           _commentsStream(args.itemId),
@@ -76,7 +74,7 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
                           decoration: InputDecoration(
                               hintText: 'Enter your comment',
                               suffixIcon: IconButton(
-                                icon: Icon(Ionicons.send),
+                                icon: const Icon(Ionicons.send),
                                 onPressed: () {
                                   _saveForm(item: args.itemId, author: args.commentAuthor);
                                   // _formKey.currentState.reset();
@@ -113,13 +111,14 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
             return snapshot.connectionState == ConnectionState.waiting
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: snapshot.data.docs.length,
                     itemBuilder: (ctx, e) {
                       return SingleChildScrollView(
                           padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                   snapshot.data.docs
@@ -127,11 +126,14 @@ class _BeanstaCommentsState extends State<BeanstaComments> {
                                       .toString(),
                                   style: Theme.of(context).textTheme.bodyText2),
                               const SizedBox(width: 5),
-                              Text(
-                                  snapshot.data.docs
-                                      .elementAt(e)['comment']
-                                      .toString(),
-                                  style: Theme.of(context).textTheme.bodyText1),
+                              Flexible(
+                                                              child: Text(
+                                    snapshot.data.docs
+                                        .elementAt(e)['comment']
+                                        .toString(),
+                                    style: Theme.of(context).textTheme.bodyText1),
+                              ),
+                                  
                             ],
                           ));
                     });

@@ -5,6 +5,7 @@ import 'package:blackbeans/models/profile.dart';
 import 'package:blackbeans/models/recipe.dart';
 import 'package:blackbeans/screens/image_capture_screen.dart';
 import 'package:blackbeans/screens/recipes_home.dart';
+import 'package:blackbeans/widgets/beans_custom_appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -24,12 +25,12 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   final _formKey = GlobalKey<FormState>();
   final _subtitleFocus = FocusNode();
   final _recipeFocus = FocusNode();
-  List<String> _createdTags = [];
+  final List<String> _createdTags = [];
   bool profileCheck = true;
   Profile user;
 
   String mealImageUrl;
-  Recipe _newRecipe = Recipe(
+  final Recipe _newRecipe = Recipe(
       creatorId: '',
       mealImage: '',
       mealTitle: '',
@@ -66,9 +67,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     } catch (error) {
       print(error);
     }
-    Navigator.canPop(context)
-        ? Navigator.of(context).pop()
-        : Navigator.of(context).popAndPushNamed(RecipesHome.routeName);
+    Navigator.of(context).popAndPushNamed(RecipesHome.routeName);
   }
 
   @override
@@ -108,41 +107,15 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Material(
-                            color: Colors.white60,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            child: IconButton(
-                              icon: const Icon(
-                                Ionicons.chevron_back,
-                                color: Colors.black,
-                                size: 22,
-                              ),
-                              onPressed: Navigator.of(context).pop,
-                            ),
-                          ),
-                          Material(
-                            color: Colors.lightBlueAccent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            child: IconButton(
-                              icon: const Icon(
-                                Ionicons.checkmark,
-                                color: Colors.white,
-                                size: 22,
-                              ),
-                              onPressed: () => _saveForm(_newRecipe),
-                            ),
-                          )
-                        ],
-                      ),
+                      child: BeansCustomAppBar(
+                    isBackButton: true,
+                    trailingIcon: const Icon(
+                      Ionicons.checkmark,
+                      color: Colors.white,
+                      size: 22,
                     ),
-                  ),
+                    trailingIconAction: () => _saveForm(_newRecipe),
+                  )),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 16, horizontal: 24),
@@ -222,7 +195,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                   keyboardType: TextInputType.multiline,
                                   minLines: 5,
                                   maxLines: 10,
-                                  maxLength: 500,
+                                  maxLength: 1500,
                                   scrollPadding: const EdgeInsets.all(5),
                                   decoration: const InputDecoration(
                                     hintText: 'Recipe instructions (optional)',
@@ -241,13 +214,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                   _createdTags.remove(tag);
                                 },
                               ),
-                              // ChipTags(
-                              //   list: createdTags,
-                              //   chipColor: Colors.grey,
-                              //   decoration: const InputDecoration(
-                              //       hintText: 'Add tags (max: 3)',
-                              //       border: UnderlineInputBorder()),
-                              // ),
                               const SizedBox(height: 15),
                               SwitchListTile(
                                   contentPadding: EdgeInsets.zero,
@@ -275,26 +241,26 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                                     });
                                   }),
                               InkWell(
-                                child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        color: Colors.blueGrey[200],
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(14))),
-                                    child: (mealImageUrl != null)
-                                        ? Image.network(mealImageUrl)
-                                        : Icon(Ionicons.image,
-                                            color: Colors.black54)),
-                                onTap: () => Navigator.of(context)
-                                    .pushNamed(ImageCaptureScreen.routeName)
-                                    .then((value) {
-                                  setState(() {
-                                    mealImageUrl = value as String;
-                                    _newRecipe.mealImage = mealImageUrl;
-                                  });
-                                }),
-                              ),
+                                  onTap: () => Navigator.of(context)
+                                          .pushNamed(
+                                              ImageCaptureScreen.routeName)
+                                          .then((value) {
+                                        setState(() {
+                                          mealImageUrl = value as String;
+                                          _newRecipe.mealImage = mealImageUrl;
+                                        });
+                                      }),
+                                  child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          color: Colors.blueGrey[200],
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(14))),
+                                      child: (mealImageUrl != null)
+                                          ? Image.network(mealImageUrl)
+                                          : const Icon(Ionicons.image,
+                                              color: Colors.black54))),
                               const SizedBox(height: 10),
                               Text(
                                 'Pick an image',
@@ -313,63 +279,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         ),
       );
     }
-  }
-}
-
-class StunningBar extends StatelessWidget {
-  final Icon leadingIcon;
-  final String centerTitle;
-  final Icon trailingIcon;
-  final Color backgroundColor;
-  final Future save;
-
-  const StunningBar({
-    this.leadingIcon,
-    this.centerTitle,
-    this.trailingIcon,
-    this.backgroundColor,
-    this.save,
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Material(
-              color: Colors.white60,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: IconButton(
-                icon: const Icon(
-                  Ionicons.chevron_back,
-                  color: Colors.black,
-                  size: 22,
-                ),
-                onPressed: Navigator.of(context).pop,
-              ),
-            ),
-            Material(
-              color: Colors.lightBlueAccent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: IconButton(
-                icon: const Icon(
-                  Ionicons.checkmark,
-                  color: Colors.white,
-                  size: 22,
-                ),
-                onPressed: () {},
-              ),
-            )
-          ],
-        ),
-      ),
-    );
   }
 }
 

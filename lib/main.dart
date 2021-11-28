@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<SwitchTheme>(
         builder: (context, switchTheme, child) => MaterialApp(
-          title: 'Flutter Demo',
+          title: 'BEANS',
           theme:
               switchTheme.darkTheme ? AppTheme.darkTheme : AppTheme.lightTheme,
           routes: {

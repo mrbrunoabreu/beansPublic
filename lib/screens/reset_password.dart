@@ -29,12 +29,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           context: context,
           builder: (_) => AlertDialog(
                 titleTextStyle: Theme.of(context).textTheme.bodyText1,
-                title: Text(
+                title: const Text(
                   'Please choose and confirm a new password',
                 ),
                 actions: [
                   FlatButton(
-                      onPressed: Navigator.of(context).pop, child: Text('Ok'))
+                      onPressed: Navigator.of(context).pop, child: const Text('Ok'))
                 ],
               ));
     }
@@ -74,7 +74,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               children: [
                 BeansCustomAppBar(
                     isBackButton: true,
-                    trailingIcon: Icon(
+                    trailingIcon: const Icon(
                       Ionicons.checkmark,
                       size: 22,
                     ),
@@ -149,7 +149,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                 return null;
                               },
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             TextFormField(
                               style: Theme.of(context).textTheme.bodyText1,
                               textInputAction: TextInputAction.next,

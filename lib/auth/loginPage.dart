@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         image: DecorationImage(
             image: AssetImage("assets/images/login-bg.jpg"), fit: BoxFit.cover),
       ),
@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
                     .headline1
                     .copyWith(color: Colors.black),
               ),
-              SizedBox(height: 18),
+              const SizedBox(height: 18),
               SizedBox(
                 child: Column(children: [
                   TextField(
@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: const InputDecoration(
                           labelText: 'Password',
                           labelStyle: TextStyle(color: Colors.black))),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   RaisedButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
